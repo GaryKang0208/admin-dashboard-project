@@ -79,15 +79,15 @@
 
 ## 3. 정보 수정
 
-| 항목 | 내용 |
-|------|------|
-| URL | `PUT /admins/{adminId}` |
-| 설명 | 관리자 정보를 수정합니다. |
-| Request Body | `name`, `email`, `phone` |
-| Response | `200 OK` |
+| 항목 | 내용                                                            |
+|------|---------------------------------------------------------------|
+| URL | `PUT /admins/{adminId}`                                       |
+| 설명 | 관리자 정보를 수정합니다.                                                |
+| Request Body | `name`, `email`, `phone`                                      |
+| Response | `200 OK`                                                      |
 | Response Body | `id`, `name`, `email`, `phone`, `role`, `status`, `updatedAt` |
-| Error | `400 Bad Request`, `404 Not Found`, `409 Conflict` |
-| 비고 | `SUPER_ADMIN`만 수정할 수 있습니다. |
+| Error | `400 Bad Request`, `404 Not Found`, `409 Conflict`            |
+| 비고 | `SUPER_ADMIN`만 수정할 수 있습니다.                                    |
 
 ---
 ## 4. 역할 변경

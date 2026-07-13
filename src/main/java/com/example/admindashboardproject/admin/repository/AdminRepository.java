@@ -1,0 +1,10 @@
+package com.example.admindashboardproject.admin.repository;
+
+import com.example.admindashboardproject.admin.entity.Admins;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface AdminRepository extends JpaRepository<Admins,Long> {
+    Optional<Admins> findByEmail(String email);
+}

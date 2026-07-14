@@ -39,4 +39,18 @@ public class AdminManageController {
                                                                @Valid @RequestBody AdminRoleUpdateRequest request) {
         return ResponseEntity.ok(service.changeAdminRole(id, request));
     }
+
+    // 관리자 상태 변경
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<AdminDetailResponse> changeAdminStatus(@PathVariable Long id,
+                                                                 @Valid @RequestBody AdminStatusUpdateRequest request) {
+        return ResponseEntity.ok(service.changeAdminStatus(id, request));
+    }
+
+    // 관리자 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAdmin(@PathVariable Long id) {
+        service.deleteAdmin(id);
+        return ResponseEntity.noContent().build();
+    }
 }

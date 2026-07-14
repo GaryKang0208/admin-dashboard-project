@@ -88,4 +88,21 @@ public class AdminManageService {
         admins.changeRole(request.getRole());
         return toDetailResponse(admins);
     }
+
+    // 관리자 상태 변경
+    public AdminDetailResponse changeAdminStatus(Long id, AdminStatusUpdateRequest request){
+        Admins admins = repository.findById(id)
+                .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
+
+        admins.changeStatus(request.getStatus());
+        return toDetailResponse(admins);
+    }
+
+    // 관리자 삭제
+    public void deleteAdmin(Long id){
+        Admins admins = repository.findById(id)
+                .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
+
+        repository.delete(admins);
+    }
 }

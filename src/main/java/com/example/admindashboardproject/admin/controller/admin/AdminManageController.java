@@ -1,7 +1,9 @@
 package com.example.admindashboardproject.admin.controller.admin;
 
 import com.example.admindashboardproject.admin.dto.*;
+import com.example.admindashboardproject.admin.global.exception.UnauthorizedException;
 import com.example.admindashboardproject.admin.service.AdminManageService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -65,5 +67,22 @@ public class AdminManageController {
     public ResponseEntity<AdminDetailResponse> rejectAdmin(@PathVariable Long id,
                                                            @Valid @RequestBody AdminRejectRequest request) {
         return ResponseEntity.ok(service.rejectAdmin(id, request));
+    }
+
+    // 세션에서 로그인한 관리자 정보를 꺼내는 헬퍼 메서드
+    private SessionAdmin getLoginAdmin(HttpSession session) {
+        SessionAdmin loginAdmin = (SessionAdmin) session.getAttribute("loginAdmin");
+        if (loginAdmin == null) {
+            throw new UnauthorizedException("로그인이 필요합니다.");
+        }
+        return loginAdmin;
+    }
+
+    // 내프로필 조회
+    @GetMapping("/me")
+    public ResponseEntity<AdminDetailResponse> getMyProfile(HttpSession session) {
+        SessionAdmin loginadmin = getLoginAdmin(session);
+
+        return ResponseEntity.ok(service.getAdminDetail(loginadmin.getId()));
     }
 }

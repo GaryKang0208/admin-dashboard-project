@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -68,11 +69,12 @@ public class AdminManageService {
     }
 
     // 관리자 정보 수정
+    @Transactional
     public AdminDetailResponse updateAdmin(Long id, AdminUpdateRequest request){
         Admins admins = repository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
 
-        if (repository.existsByEmail(request.getEmail(), id)){
+        if (repository.existsByEmailAndIdNot(request.getEmail(), id)){
             throw new DuplicateEmailException("이미 사용 중인 이메일입니다.");
         }
 
@@ -81,6 +83,7 @@ public class AdminManageService {
     }
 
     // 관리자 역할 변경
+    @Transactional
     public AdminDetailResponse changeAdminRole(Long id, AdminRoleUpdateRequest request){
         Admins admins = repository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
@@ -90,6 +93,7 @@ public class AdminManageService {
     }
 
     // 관리자 상태 변경
+    @Transactional
     public AdminDetailResponse changeAdminStatus(Long id, AdminStatusUpdateRequest request){
         Admins admins = repository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
@@ -99,6 +103,7 @@ public class AdminManageService {
     }
 
     // 관리자 삭제
+    @Transactional
     public void deleteAdmin(Long id){
         Admins admins = repository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
@@ -107,6 +112,7 @@ public class AdminManageService {
     }
 
     // 관리자 승인
+    @Transactional
     public AdminDetailResponse approveAdmin(Long id){
         Admins admins = repository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자 입니다."));
@@ -116,6 +122,7 @@ public class AdminManageService {
     }
 
     // 관리자 거부
+    @Transactional
     public AdminDetailResponse rejectAdmin(Long id, AdminRejectRequest request){
         Admins admins = repository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));

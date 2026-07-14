@@ -24,4 +24,19 @@ public class Customer extends BaseEntity {
     private String status;
     private int totalOrders;
     private long totalPurchaseAmount;
+
+    public Customer(String name, String email, String phone, String status, int totalOrders, long totalPurchaseAmount) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.status = status;
+        this.totalOrders = totalOrders;
+        this.totalPurchaseAmount = totalPurchaseAmount;
+    }
+
+    public void update(String name, String email, String phone) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+    }
 }

@@ -14,32 +14,37 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/customers")
 public class CustomerController {
-    public final CustomersService service;
+    public final CustomersService customersService;
 
 
     @GetMapping("/{customerId}")//리스트 조회
     public ResponseEntity<List<CustomerResponse>> findAll(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email){
-        List<CustomerResponse> one = service.findAll(name, email);
+        List<CustomerResponse> one = customersService.findAll(name, email);
         return ResponseEntity.ok(one);
     }
 
-    @GetMapping //상세 조회
+    @GetMapping("/{customerId}") //상세 조회
     public ResponseEntity<CustomerResponse> findOne(@PathVariable Long id){
-        List<CustomerResponse> responseList = service.findOne(id);
+        CustomerResponse responseList = customersService.findOne(id);
         return ResponseEntity.ok(responseList);
     }
 
-    @PutMapping("/{id}") //고객 정보 수정
+    @PutMapping("/{customerId}") //고객 정보 수정
     public ResponseEntity<CustomerResponse> update(@PathVariable Long id, @RequestBody CustomerUpdateResponse customerUpdateResponse){
-        service.update(id);
-        return ResponseEntity.ok();
+        CustomerResponse customerResponse = customersService.update(id, customerUpdateResponse);
+        return ResponseEntity.ok(customerResponse);
     }
+//    @PutMapping("/{customerId}") //고객 상태 변경
+//    public ResponseEntity<CustomerResponse> update(@PathVariable Long id, @RequestBody CustomerUpdateResponse customerUpdateResponse){
+//        CustomerResponse customerResponse = customersService.update(id, customerUpdateResponse);
+//        return ResponseEntity.ok(customerResponse);
+//    }
 
-    @DeleteMapping("/{id}") //삭제
-    public ResponseEntity<Void> delete(@PathVariable Long id){
-        service.delete(id);
+    @DeleteMapping("/{customerId}") //삭제
+    public ResponseEntity<Void> delete(@PathVariable Long id,@RequestBody CustomerUpdateResponse customerUpdateResponse){
+        customersService.delete(id);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 

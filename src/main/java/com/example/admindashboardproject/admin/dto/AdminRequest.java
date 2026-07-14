@@ -9,6 +9,7 @@ import lombok.Getter;
 
 @Getter
 
+// 회원가입용
 public class AdminRequest {
     @NotBlank(message = "이름은 필수 입력값입니다.")
     private String name;

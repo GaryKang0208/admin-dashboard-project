@@ -8,11 +8,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 
+// 회원가입용
 public class AdminResponse {
-    private final Long id;
     private final String name;
     private final String email;
-    private final String phone;
-    private final Role role;
-    private final Status status;
 }

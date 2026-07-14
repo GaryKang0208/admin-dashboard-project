@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.Optional;
 
 public interface AdminRepository extends JpaRepository<Admins, Long>, JpaSpecificationExecutor<Admins> {
-    boolean existsByEmail(String email);
+    boolean existsByEmail(String email, Long id);
 
     // 관리자 정보 수정 시, 자신 제외 이메일 중복 체크할 때 사용
     boolean existsByEmailAndIdNot(String email, Long id);

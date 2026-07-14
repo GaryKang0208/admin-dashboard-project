@@ -2,15 +2,13 @@ package com.example.admindashboardproject.admin.controller.admin;
 
 import com.example.admindashboardproject.admin.dto.AdminDetailResponse;
 import com.example.admindashboardproject.admin.dto.AdminSearchRequest;
+import com.example.admindashboardproject.admin.dto.AdminUpdateRequest;
 import com.example.admindashboardproject.admin.dto.PageResponse;
 import com.example.admindashboardproject.admin.service.AdminManageService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,5 +27,12 @@ public class AdminManageController {
     @GetMapping("/{id}")
     public ResponseEntity<AdminDetailResponse> getAdminDetail(@PathVariable Long id) {
         return ResponseEntity.ok(service.getAdminDetail(id));
+    }
+
+    // 관리자 정보 수정
+    @PatchMapping("/{id}")
+    public ResponseEntity<AdminDetailResponse> updateAdmin(@PathVariable Long id,
+                                                           @Valid @RequestBody AdminUpdateRequest request) {
+        return ResponseEntity.ok(service.updateAdmin(id, request));
     }
 }

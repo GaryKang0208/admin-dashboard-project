@@ -3,9 +3,11 @@ package com.example.admindashboardproject.admin.service;
 import com.example.admindashboardproject.admin.config.PasswordEncoder;
 import com.example.admindashboardproject.admin.dto.AdminDetailResponse;
 import com.example.admindashboardproject.admin.dto.AdminSearchRequest;
+import com.example.admindashboardproject.admin.dto.AdminUpdateRequest;
 import com.example.admindashboardproject.admin.dto.PageResponse;
 import com.example.admindashboardproject.admin.entity.Admins;
 import com.example.admindashboardproject.admin.global.exception.AdminNotFoundException;
+import com.example.admindashboardproject.admin.global.exception.DuplicateEmailException;
 import com.example.admindashboardproject.admin.repository.AdminRepository;
 import com.example.admindashboardproject.admin.repository.AdminSpecification;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +67,19 @@ public class AdminManageService {
     public AdminDetailResponse getAdminDetail(Long id){
         Admins admins = repository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
+        return toDetailResponse(admins);
+    }
+
+    // 관리자 정보 수정
+    public AdminDetailResponse updateAdmin(Long id, AdminUpdateRequest request){
+        Admins admins = repository.findById(id)
+                .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
+
+        if (repository.existsByEmail(request.getEmail(), id)){
+            throw new DuplicateEmailException("이미 사용 중인 이메일입니다.");
+        }
+
+        admins.updateInfo(request.getName(), request.getEmail(),  request.getPhone());
         return toDetailResponse(admins);
     }
 }

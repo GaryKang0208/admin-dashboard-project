@@ -93,4 +93,13 @@ public class AdminManageController {
         SessionAdmin loginadmin = getLoginAdmin(session);
         return ResponseEntity.ok(service.updateAdmin(loginadmin.getId(), request));
     }
+
+    // 비밀번호 변경
+    @PatchMapping("/me/password")
+    public ResponseEntity<Void> changedPassword(HttpSession session,
+                                                @Valid @RequestBody PasswordChangeRequest request) {
+        SessionAdmin loginadmin = getLoginAdmin(session);
+        service.changePassword(loginadmin.getId(), request);
+        return ResponseEntity.ok().build();
+    }
 }

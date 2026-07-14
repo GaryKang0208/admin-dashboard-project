@@ -5,6 +5,7 @@ import com.example.admindashboardproject.admin.dto.*;
 import com.example.admindashboardproject.admin.entity.Admins;
 import com.example.admindashboardproject.admin.global.exception.AdminNotFoundException;
 import com.example.admindashboardproject.admin.global.exception.DuplicateEmailException;
+import com.example.admindashboardproject.admin.global.exception.InvalidCredentialException;
 import com.example.admindashboardproject.admin.repository.AdminRepository;
 import com.example.admindashboardproject.admin.repository.AdminSpecification;
 import lombok.RequiredArgsConstructor;
@@ -129,5 +130,17 @@ public class AdminManageService {
 
         admins.reject(request.getRejectReason());
         return toDetailResponse(admins);
+    }
+
+    // 비밀번호 변경
+    @Transactional
+    public void changePassword(Long id, PasswordChangeRequest request){
+        Admins admins = repository.findById(id)
+                .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), admins.getPassword())){
+            throw new InvalidCredentialException("현재 비밀번호가 일치하지 않습니다.");
+        }
+        admins.changePassword(passwordEncoder.encode(request.getNewPassword()));
     }
 }

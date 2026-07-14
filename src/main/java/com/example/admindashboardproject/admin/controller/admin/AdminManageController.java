@@ -53,4 +53,17 @@ public class AdminManageController {
         service.deleteAdmin(id);
         return ResponseEntity.noContent().build();
     }
+
+    // 관리자 승인
+    @PatchMapping("/{id}/approve")
+    public ResponseEntity<AdminDetailResponse> approveAdmin(@PathVariable Long id) {
+        return ResponseEntity.ok(service.approveAdmin(id));
+    }
+
+    // 관리자 거부
+    @PatchMapping("/{id}/reject")
+    public ResponseEntity<AdminDetailResponse> rejectAdmin(@PathVariable Long id,
+                                                           @Valid @RequestBody AdminRejectRequest request) {
+        return ResponseEntity.ok(service.rejectAdmin(id, request));
+    }
 }

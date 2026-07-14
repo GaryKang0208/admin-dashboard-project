@@ -105,4 +105,22 @@ public class AdminManageService {
 
         repository.delete(admins);
     }
+
+    // 관리자 승인
+    public AdminDetailResponse approveAdmin(Long id){
+        Admins admins = repository.findById(id)
+                .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자 입니다."));
+
+        admins.approve();
+        return toDetailResponse(admins);
+    }
+
+    // 관리자 거부
+    public AdminDetailResponse rejectAdmin(Long id, AdminRejectRequest request){
+        Admins admins = repository.findById(id)
+                .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
+
+        admins.reject(request.getRejectReason());
+        return toDetailResponse(admins);
+    }
 }

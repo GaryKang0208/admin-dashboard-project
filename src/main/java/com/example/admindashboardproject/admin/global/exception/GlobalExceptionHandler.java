@@ -1,7 +1,5 @@
 package com.example.admindashboardproject.admin.global.exception;
 
-
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,7 +19,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(new ErrorResponse("INVALID_INPUT", message));
     }
-
 
     // 이메일 중복
     @ExceptionHandler(DuplicateEmailException.class)
@@ -51,6 +48,10 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse("INTERNAL_SERVER_ERROR", "서버 내부 오류가 발생했습니다."));
     }
 
-
-
+    // 존재하지 않는 관리자 조회
+    @ExceptionHandler(AdminNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleAdminNotFound(AdminNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse("NOT_FOUND", e.getMessage()));
+    }
 }

@@ -5,6 +5,7 @@ import com.example.admindashboardproject.admin.dto.AdminDetailResponse;
 import com.example.admindashboardproject.admin.dto.AdminSearchRequest;
 import com.example.admindashboardproject.admin.dto.PageResponse;
 import com.example.admindashboardproject.admin.entity.Admins;
+import com.example.admindashboardproject.admin.global.exception.AdminNotFoundException;
 import com.example.admindashboardproject.admin.repository.AdminRepository;
 import com.example.admindashboardproject.admin.repository.AdminSpecification;
 import lombok.RequiredArgsConstructor;
@@ -58,5 +59,12 @@ public class AdminManageService {
                 admins.getCreatedAt(),
                 admins.getApprovedAt()
         );
+    }
+
+    // 관리자 상세 조회
+    public AdminDetailResponse getAdminDetail(Long id){
+        Admins admins = repository.findById(id)
+                .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
+        return toDetailResponse(admins);
     }
 }

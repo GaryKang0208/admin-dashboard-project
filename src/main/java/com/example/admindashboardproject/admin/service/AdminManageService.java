@@ -1,10 +1,7 @@
 package com.example.admindashboardproject.admin.service;
 
 import com.example.admindashboardproject.admin.config.PasswordEncoder;
-import com.example.admindashboardproject.admin.dto.AdminDetailResponse;
-import com.example.admindashboardproject.admin.dto.AdminSearchRequest;
-import com.example.admindashboardproject.admin.dto.AdminUpdateRequest;
-import com.example.admindashboardproject.admin.dto.PageResponse;
+import com.example.admindashboardproject.admin.dto.*;
 import com.example.admindashboardproject.admin.entity.Admins;
 import com.example.admindashboardproject.admin.global.exception.AdminNotFoundException;
 import com.example.admindashboardproject.admin.global.exception.DuplicateEmailException;
@@ -80,6 +77,15 @@ public class AdminManageService {
         }
 
         admins.updateInfo(request.getName(), request.getEmail(),  request.getPhone());
+        return toDetailResponse(admins);
+    }
+
+    // 관리자 역할 변경
+    public AdminDetailResponse changeAdminRole(Long id, AdminRoleUpdateRequest request){
+        Admins admins = repository.findById(id)
+                .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
+
+        admins.changeRole(request.getRole());
         return toDetailResponse(admins);
     }
 }

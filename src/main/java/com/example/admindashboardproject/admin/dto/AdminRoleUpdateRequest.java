@@ -1,7 +1,6 @@
 package com.example.admindashboardproject.admin.dto;
 
 import com.example.admindashboardproject.admin.entity.Role;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 

@@ -1,9 +1,6 @@
 package com.example.admindashboardproject.admin.controller.admin;
 
-import com.example.admindashboardproject.admin.dto.AdminDetailResponse;
-import com.example.admindashboardproject.admin.dto.AdminSearchRequest;
-import com.example.admindashboardproject.admin.dto.AdminUpdateRequest;
-import com.example.admindashboardproject.admin.dto.PageResponse;
+import com.example.admindashboardproject.admin.dto.*;
 import com.example.admindashboardproject.admin.service.AdminManageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +31,12 @@ public class AdminManageController {
     public ResponseEntity<AdminDetailResponse> updateAdmin(@PathVariable Long id,
                                                            @Valid @RequestBody AdminUpdateRequest request) {
         return ResponseEntity.ok(service.updateAdmin(id, request));
+    }
+
+    // 관리자 역할 변경
+    @PatchMapping("/{id}/role")
+    public ResponseEntity<AdminDetailResponse> changeAdminRole(@PathVariable Long id,
+                                                               @Valid @RequestBody AdminRoleUpdateRequest request) {
+        return ResponseEntity.ok(service.changeAdminRole(id, request));
     }
 }

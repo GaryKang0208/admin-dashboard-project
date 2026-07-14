@@ -78,11 +78,19 @@ public class AdminManageController {
         return loginAdmin;
     }
 
-    // 내프로필 조회
+    // 내 프로필 조회
     @GetMapping("/me")
     public ResponseEntity<AdminDetailResponse> getMyProfile(HttpSession session) {
         SessionAdmin loginadmin = getLoginAdmin(session);
 
         return ResponseEntity.ok(service.getAdminDetail(loginadmin.getId()));
+    }
+
+    // 내 프로필 수정
+    @PatchMapping("/me")
+    public ResponseEntity<AdminDetailResponse> updateMyProfile(HttpSession session,
+                                                               @Valid @RequestBody AdminUpdateRequest request) {
+        SessionAdmin loginadmin = getLoginAdmin(session);
+        return ResponseEntity.ok(service.updateAdmin(loginadmin.getId(), request));
     }
 }

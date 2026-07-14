@@ -16,6 +16,18 @@
 | Error | `400 Bad Request`, `409 Conflict` |
 | 비고 | 비밀번호는 8자 이상, 이메일 중복 불가, 필수값 누락, 가입 시 상태는 `PENDING`입니다. |
 
+Response Body
+```json
+{
+"id": 1,
+"name": "홍길동",
+"email": "admin@example.com",
+"phone": "010-1234-5678",
+"role": "슈퍼 관리자",
+"status": "승인대기",
+"createdAt": " 2026-13T12:00:00"
+}
+```
 ---
 
 # 2. 관리자 인증
@@ -31,7 +43,16 @@
 | Response Body | `id`, `name`, `email`, `role`, `status` |
 | Error | `400 Bad Request`, `401 Unauthorized` |
 | 비고 | 승인된 관리자만 로그인할 수 있습니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"name": "홍길동",
+	"email": "admin@example.com",
+	"role": "슈퍼 관리자",
+	"status": "활성"
+}
+```
 ---
 
 ## 2. 로그아웃
@@ -45,7 +66,12 @@
 | Response Body | `message` |
 | Error | `401 Unauthorized`, `500 Internal Server Error` |
 | 비고 | 로그인 세션을 종료합니다. |
-
+Response Body
+```json
+{
+	"message": "로그아웃되었습니다"
+}
+```
 ---
 
 # 3. 관리자 정보 관리
@@ -61,7 +87,13 @@
 | Response Body | `admins`, `pagination` |
 | Error | `400 Bad Request`, `401 Unauthorized`, `403 Forbidden` |
 | 비고 | `SUPER_ADMIN`만 조회할 수 있습니다. |
-
+Response Body
+```json
+{
+	"admins": [],
+	"pagination": {}
+}
+```
 ---
 
 ## 2. 상세 조회
@@ -74,7 +106,20 @@
 | Response Body | `id`, `name`, `email`, `phone`, `role`, `status`, `createdAt`, `approvedAt`, `rejectedAt` |
 | Error | `400 Bad Request`, `404 Not Found` |
 | 비고 | `SUPER_ADMIN`만 조회할 수 있습니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"name": "홍길동",
+	"email": "admin@example.com",
+	"phone": "010-1234-5678",
+	"role": "슈퍼 관리자",
+	"status": "승인대기",
+	"createdAt": " 2026-13T12:00:00",
+	"approvedAt": " 2026-13T13:00:00",
+	"rejectedAt": null
+}
+```
 ---
 
 ## 3. 정보 수정
@@ -88,7 +133,18 @@
 | Response Body | `id`, `name`, `email`, `phone`, `role`, `status`, `updatedAt` |
 | Error | `400 Bad Request`, `404 Not Found`, `409 Conflict`            |
 | 비고 | `SUPER_ADMIN`만 수정할 수 있습니다.                                    |
-
+Response Body
+```json
+{
+"id": 1,
+"name": "홍길동",
+"email": "admin@example.com",
+"phone": "010-1234-5678",
+"role": "슈퍼 관리자",
+"status": "승인대기",
+"updatedAt": " 2026-13T12:00:00"
+}
+```
 ---
 ## 4. 역할 변경
 
@@ -101,7 +157,18 @@
 | Response Body | `id`, `name`, `email`, `phone`, `role`, `status`, `updatedAt` |
 | Error | `400 Bad Request`, `404 Not Found` |
 | 비고 | `SUPER_ADMIN`만 역할을 변경할 수 있습니다. |
-
+Response Body
+```json
+{
+"id": 1,
+"name": "홍길동",
+"email": "admin@example.com",
+"phone": "010-1234-5678",
+"role": "슈퍼 관리자",
+"status": "승인대기",
+"updatedAt": " 2026-13T12:00:00"
+}
+```
 ---
 
 ## 5. 상태 변경
@@ -115,7 +182,18 @@
 | Response Body | `id`, `name`, `email`, `phone`, `role`, `status`, `updatedAt` |
 | Error | `400 Bad Request`, `404 Not Found` |
 | 비고 | `SUPER_ADMIN`만 상태를 변경할 수 있습니다. 상태는 `ACTIVE`, `INACTIVE`, `SUSPENDED`로 변경 가능합니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"name": "홍길동",
+	"email": "admin@example.com",
+	"phone": "010-1234-5678",
+	"role": "슈퍼 관리자",
+	"status": "승인대기",
+	"updatedAt": " 2026-13T12:00:00"
+}
+```
 ---
 
 ## 6. 관리자 삭제
@@ -128,7 +206,7 @@
 | Response Body | 없음 |
 | Error | `404 Not Found` |
 | 비고 | `SUPER_ADMIN`만 삭제할 수 있습니다. |
-
+Response Body : 없음
 ---
 
 ## 7. 관리자 승인
@@ -142,7 +220,18 @@
 | Response Body | `id`, `name`, `email`, `phone`, `role`, `status`, `approvedAt` |
 | Error | `400 Bad Request`, `404 Not Found` |
 | 비고 | `SUPER_ADMIN`만 승인할 수 있으며 승인 후 상태는 `ACTIVE`로 변경됩니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"name": "홍길동",
+	"email": "admin@example.com",
+	"phone": "010-1234-5678",
+	"role": "슈퍼 관리자",
+	"status": "승인대기",
+	"approvedAt": " 2026-07-13T12:00:00"
+}
+```
 ---
 
 ## 8. 관리자 거절
@@ -156,7 +245,18 @@
 | Response Body | `id`, `name`, `email`, `phone`, `role`, `status`, `rejectedAt` |
 | Error | `400 Bad Request`, `404 Not Found` |
 | 비고 | `SUPER_ADMIN`만 거절할 수 있으며 상태는 `REJECTED`로 변경됩니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"name": "홍길동",
+	"email": "admin@example.com",
+	"phone": "010-1234-5678",
+	"role": "슈퍼 관리자",
+	"status": "승인대기",
+	"rejectedAt": " 2026-07-13T12:00:00"
+}
+```
 ---
 
 ## 9. 내 프로필 조회
@@ -169,7 +269,19 @@
 | Response Body | `id`, `name`, `email`, `phone`, `role`, `status`, `createdAt`, `approvedAt` |
 | Error | `401 Unauthorized`, `404 Not Found` |
 | 비고 | 로그인한 관리자 본인의 정보만 조회할 수 있습니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"name": "홍길동",
+	"email": "admin@example.com",
+	"phone": "010-1234-5678",
+	"role": "슈퍼 관리자",
+	"status": "승인대기",
+	"createdAt": " 2026-07-13T12:00:00",
+	"approvedAt": " 2026-07-13T13:00:00"
+}
+```
 ---
 
 ## 10. 내 프로필 수정
@@ -183,7 +295,18 @@
 | Response Body | `id`, `name`, `email`, `phone`, `role`, `status`, `updatedAt` |
 | Error | `400 Bad Request`, `409 Conflict` |
 | 비고 | 본인의 이름, 이메일, 전화번호만 수정할 수 있습니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"name": "홍길동",
+	"email": "admin@example.com",
+	"phone": "010-1234-5678",
+	"role": "슈퍼 관리자",
+	"status": "승인대기",
+	"updatedAt": " 2026-07-13T13:00:00"
+}
+```
 ---
 
 ## 11. 비밀번호 변경
@@ -197,7 +320,12 @@
 | Response Body | `message` |
 | Error | `400 Bad Request`, `401 Unauthorized` |
 | 비고 | 새 비밀번호는 8자 이상이어야 하며 기존 비밀번호와 동일할 수 없습니다. |
-
+Response Body
+```json
+{
+	"message": "비밀번호가 변경되었습니다."
+}
+```
 ---
 
 # 4. 고객 정보 관리
@@ -213,7 +341,13 @@
 | Response Body | `customers`, `pagination` |
 | Error | `400 Bad Request` |
 | 비고 | 검색, 정렬, 페이징을 지원합니다. |
-
+Response Body
+```json
+{
+"customers": [],
+"pagination": {}
+}
+```
 ---
 
 ## 2. 고객 상세 조회
@@ -226,7 +360,19 @@
 | Response Body | `id`, `name`, `email`, `phone`, `status`, `totalOrders`, `totalPurchaseAmount`, `createdAt` |
 | Error | `404 Not Found` |
 | 비고 | 존재하지 않는 고객은 조회할 수 없습니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"name": "홍길동",
+	"email": "admin@example.com",
+	"phone": "010-1234-5678",
+	"status": "승인대기",
+	"totalOrders": 1,
+	"totalPurchaseAmount": 10000,
+	"createdAt": " 2026-07-13T13:00:00"
+}
+```
 ---
 
 ## 3. 고객 정보 수정
@@ -254,7 +400,15 @@
 | Response Body | `id`, `name`, `status`, `updatedAt` |
 | Error | `400 Bad Request`, `404 Not Found` |
 | 비고 | 상태는 `ACTIVE`, `INACTIVE`, `SUSPENDED`로 변경할 수 있습니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"name": "홍길동",
+	"status": "승인대기",
+	"updatedAt": " 2026-07-13T13:00:00"
+}
+```
 ---
 
 ## 5. 고객 삭제
@@ -267,7 +421,12 @@
 | Response Body | `message` |
 | Error | `404 Not Found` |
 | 비고 | 삭제 완료 메시지를 반환합니다. |
-
+Response Body
+```json
+{
+"message": " 고객이 삭제되었습니다."
+}
+```
 ---
 
 # 5. 상품 정보 관리
@@ -283,7 +442,19 @@
 | Response Body | `id`, `name`, `category`, `price`, `stock`, `status`, `createdAt`, `createdBy` |
 | Error | `400 Bad Request` |
 | 비고 | 가격과 재고는 0 이상이어야 합니다. |
-
+Response Body
+```json
+{
+"id": 1,
+"name": "상품명",
+"category": "카테고리",
+"price": 100000,
+"stock": 10,
+"status": "승인대기",
+"createdAt": " 2026-07-13T13:00:00",
+"createdBy": "등록관리자"
+}
+```
 ---
 
 ## 2. 상품 리스트 조회
@@ -297,7 +468,13 @@
 | Response Body | `products`, `pagination` |
 | Error | `400 Bad Request` |
 | 비고 | 검색, 정렬, 페이징을 지원합니다. |
-
+Response Body
+```json
+{
+"products": [],
+"pagination": {}
+}
+```
 ---
 
 ## 3. 상품 상세 조회
@@ -310,7 +487,20 @@
 | Response Body | `id`, `name`, `category`, `price`, `stock`, `status`, `createdAt`, `createdBy`, `createdByEmail` |
 | Error | `404 Not Found` |
 | 비고 | 존재하지 않는 상품은 조회할 수 없습니다. |
-
+Response Body
+```json
+{
+"id": 1,
+"name": "상품명",
+"category": "카테고리",
+"price": 100000,
+"stock": 10,
+"status": "승인대기",
+"createdAt": " 2026-07-13T13:00:00",
+"createdBy": "등록관리자",
+"createdByEmail": "admin@example.com"
+}
+```
 ---
 
 ## 4. 상품 정보 수정
@@ -324,7 +514,19 @@
 | Response Body | `id`, `name`, `category`, `price`, `stock`, `status`, `updatedAt`, `createdBy` |
 | Error | `400 Bad Request`, `404 Not Found` |
 | 비고 | 변경할 정보만 수정할 수 있습니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"name": "상품명",
+	"category": "카테고리",
+	"price": 100000,
+	"stock": 10,
+	"status": "승인대기",
+	"updatedAt": " 2026-07-13T13:00:00",
+	"createdBy": "등록관리자"
+}
+```
 ---
 
 ## 5. 상품 재고 변경
@@ -338,7 +540,16 @@
 | Response Body | `id`, `name`, `stock`, `status`, `updatedAt` |
 | Error | `400 Bad Request`, `404 Not Found` |
 | 비고 | 재고가 0이면 `SOLD_OUT`, 1 이상이면 `SELLING`으로 자동 변경됩니다. 단, `DISCONTINUED` 상태는 변경되지 않습니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"name": "상품명",
+	"stock": "단종",
+	"status": "승인대기",
+	"updatedAt": " 2026-07-13T13:00:00"
+}
+```
 ---
 
 ## 6. 상품 상태 변경
@@ -352,7 +563,15 @@
 | Response Body | `id`, `name`, `status`, `updatedAt` |
 | Error | `400 Bad Request`, `404 Not Found` |
 | 비고 | 변경 가능한 상태는 `SELLING`, `SOLD_OUT`, `DISCONTINUED`입니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"name": "상품",
+	"status": "승인대기",
+	"updatedAt": " 2026-07-13T13:00:00"
+}
+```
 ---
 
 ## 7. 상품 삭제
@@ -365,7 +584,12 @@
 | Response Body | `message` |
 | Error | `404 Not Found` |
 | 비고 | 삭제 완료 메시지를 반환합니다. |
-
+Response Body
+```json
+{
+	"message": "상품이 삭제되었습니다"
+}
+```
 ---
 
 # 6. 주문 정보 관리
@@ -381,7 +605,20 @@
 | Response Body | `id`, `orderNumber`, `customerName`, `productName`, `quantity`, `totalPrice`, `status`, `orderedAt`, `createdBy` |
 | Error | `400 Bad Request`, `404 Not Found` |
 | 비고 | 상품 재고보다 많은 수량은 주문할 수 없습니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"orderNumber": "20260512-001",
+	"customerName": "고객명",
+	"productName": "상품명",
+	"quantity":20,
+	"totalPrice": 12110,
+	"status": "배송중",
+	"orderedAt":" 2026-07-13T13:00:00",
+	"createdBy": "등록관리자"
+}
+```
 ---
 
 ## 2. 주문 리스트 조회
@@ -395,7 +632,13 @@
 | Response Body | `orders`, `pagination` |
 | Error | `400 Bad Request` |
 | 비고 | 검색, 정렬, 페이징을 지원합니다. |
-
+Response Body
+```json
+{
+	"orders": [],
+	"pagination": {}
+}
+```
 ---
 
 ## 3. 주문 상세 조회
@@ -408,7 +651,23 @@
 | Response Body | `id`, `orderNumber`, `customerName`, `customerEmail`, `productName`, `quantity`, `totalPrice`, `orderedAt`, `status`, `createdBy`, `createdByEmail`, `createdByRole` |
 | Error | `404 Not Found` |
 | 비고 | 관리자가 생성한 주문인 경우 생성 관리자 정보가 함께 조회됩니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"orderNumber": "20260512-001",
+	"customerName": "고객명",
+	"customerEmail": "admin@example.com",
+	"productName": "상품명",
+	"quantity":20,
+	"totalPrice": 12110,
+	"orderedAt": " 2026-07-12T13:00:00",
+	"status": "배송중",
+	"createdBy":"작성자",
+	"createdByEmail": "hkljhlk@example.com",
+	"createdByRole": "관리자"
+}
+```
 ---
 
 ## 4. 주문 상태 변경
@@ -422,7 +681,15 @@
 | Response Body | `id`, `orderNumber`, `status`, `updatedAt` |
 | Error | `400 Bad Request`, `404 Not Found` |
 | 비고 | 상태는 `PREPARING → SHIPPING → DELIVERED` 순서로만 변경할 수 있습니다. |
-
+Response Body
+```json
+{
+	"id": 1,
+	"orderNumber": "20260512-001",
+	"status": "배송중",
+	"updatedAt": " 2026-07-12T13:00:00"
+}
+```
 ---
 
 ## 5. 주문 취소
@@ -436,3 +703,13 @@
 | Response Body | `id`, `orderNumber`, `status`, `cancelReason`, `canceledAt` |
 | Error | `400 Bad Request`, `404 Not Found` |
 | 비고 | `PREPARING` 상태의 주문만 취소할 수 있으며, 취소 시 상품 재고가 자동 복구됩니다. |
+Response Body
+```json
+{
+	"id": 1,
+	"orderNumber": "20260512-001",
+	"status": "배송중",
+	"cancelReason": "주문 취소",
+	"canceledAt": " 2026-07-12T13:00:00"
+}
+```

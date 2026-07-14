@@ -5,7 +5,7 @@ import com.example.admindashboardproject.product.entity.ProductStatus;
 
 import java.time.LocalDateTime;
 
-public class ProductResponse(
+public record ProductResponse(
         Long id,
         String name,
         String category,

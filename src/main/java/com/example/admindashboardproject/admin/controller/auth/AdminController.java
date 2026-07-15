@@ -35,7 +35,8 @@ public class AdminController {
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody AdminLoginRequest request, HttpSession session) {
 
-        SessionAdmin sessionAdmin = service.login(request);
+
+        SessionAdmin sessionAdmin = service.loginadmin(request);
         session.setAttribute("loginAdmin", sessionAdmin);
         return ResponseEntity.ok().build();
     }

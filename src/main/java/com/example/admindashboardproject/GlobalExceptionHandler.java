@@ -1,18 +1,12 @@
 package com.example.admindashboardproject;
 
+import com.example.admindashboardproject.admin.global.exception.*;
+import com.example.admindashboardproject.order.exception.*;
 import com.example.admindashboardproject.product.exception.InvalidProductStatusException;
 import com.example.admindashboardproject.product.exception.AdminNotFoundException;
 import com.example.admindashboardproject.product.exception.InvalidStockException;
 import com.example.admindashboardproject.product.exception.ProductNotFoundException;
 
-import com.example.admindashboardproject.admin.global.exception.DuplicateEmailException;
-import com.example.admindashboardproject.admin.global.exception.ErrorResponse;
-import com.example.admindashboardproject.admin.global.exception.InvalidCredentialException;
-import com.example.admindashboardproject.admin.global.exception.InvalidStatus;
-import com.example.admindashboardproject.order.exception.InvalidQuantityException;
-import com.example.admindashboardproject.order.exception.InvalidStatusOrder;
-import com.example.admindashboardproject.order.exception.NotFoundException;
-import com.example.admindashboardproject.order.exception.ProductException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -78,17 +72,14 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse("Invalid Status Transition", e.getMessage()));
     }
 
-
-
-
-
-
     // 그 외 예상 못 한 예외 - 최후의 방어선
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpected(Exception e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse("INTERNAL_SERVER_ERROR", "서버 내부 오류가 발생했습니다."));
     }
+
     @ExceptionHandler(InvalidProductStatusException.class)
     public ResponseEntity<String> handleInvalidProductStatus(InvalidProductStatusException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -98,6 +89,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleProductNotFound(ProductNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
     @ExceptionHandler(InvalidStockException.class)
     public ResponseEntity<String> handleInvalidStock(InvalidStockException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -108,6 +100,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleAdminNotFound(AdminNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse("NOT_FOUND", e.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidCancelException.class)
+    public ResponseEntity<String> handleInvalidStock(InvalidCancelException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
     // 로그인 안 하고 접근

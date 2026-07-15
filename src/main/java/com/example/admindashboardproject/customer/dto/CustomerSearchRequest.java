@@ -13,6 +13,6 @@ public class CustomerSearchRequest {
         private int size =10;
         private String sortBy ="name";
         private String direction="asc";
-        private CustomerStatus status = CustomerStatus.ACTIVE;
+        private CustomerStatus status;
 
 }

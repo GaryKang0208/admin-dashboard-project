@@ -3,14 +3,16 @@ package com.example.admindashboardproject.order.service;
 
 import com.example.admindashboardproject.admin.entity.Admins;
 import com.example.admindashboardproject.admin.repository.AdminRepository;
+import com.example.admindashboardproject.customer.entity.Customer;
+import com.example.admindashboardproject.customer.repository.CustomerRepository;
 import com.example.admindashboardproject.order.dto.*;
 import com.example.admindashboardproject.order.entity.OrderStatus;
 import com.example.admindashboardproject.order.entity.Orders;
-import com.example.admindashboardproject.order.exception.InvalidQuantityException;
-import com.example.admindashboardproject.order.exception.InvalidStatusOrder;
-import com.example.admindashboardproject.order.exception.NotFoundException;
-import com.example.admindashboardproject.order.exception.ProductException;
+import com.example.admindashboardproject.order.exception.*;
 import com.example.admindashboardproject.order.repository.OrderRepository;
+import com.example.admindashboardproject.product.entity.Product;
+import com.example.admindashboardproject.product.entity.ProductStatus;
+import com.example.admindashboardproject.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -59,6 +61,7 @@ public class OrderService {
                 saved.getCreatedAt()
         );
     }
+
     public ListGetOrderResponse getOrders(
             String keyword, int page, int size, String sortBy, String sortOrder, OrderStatus status) {
         String sortProperty = resolveSortProperty(sortBy);
@@ -68,11 +71,11 @@ public class OrderService {
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         Page<Orders> orderPage;
         if (keyword != null && !keyword.isBlank() && status != null) {
-            orderPage = orderRepository.findByStatusAndOrderNumberContainingOrStatusAndCustomerCustomerNameContaining(
+            orderPage = orderRepository.findByStatusAndOrderNumberContainingOrStatusAndCustomerNameContaining(
                     status, keyword, status, keyword, pageable
             );
         } else if (keyword != null && !keyword.isBlank()) {
-            orderPage = orderRepository.findByOrderNumberContainingOrCustomerCustomerNameContaining(
+            orderPage = orderRepository.findByOrderNumberContainingOrCustomerNameContaining(
                     keyword, keyword, pageable
             );
         } else if (status != null) {
@@ -94,7 +97,6 @@ public class OrderService {
 
         return new ListGetOrderResponse(orders, pageInfo);
     }
-
 
     public GetOrderDetailResponse getOrderDetail(Long id) {
         Orders order = orderRepository.findById(id)
@@ -134,7 +136,6 @@ public class OrderService {
         Orders saved = orderRepository.save(order);
 
         return new UpdateStatusResponse(saved.getId(), saved.getOrderNumber(), saved.getStatus());
-
     }
 
     @Transactional
@@ -166,7 +167,6 @@ public class OrderService {
         );
     }
 
-
     private GetOrderResponse toResponse(Orders order) {
         return new GetOrderResponse(
                 order.getId(),
@@ -190,20 +190,8 @@ public class OrderService {
         };
     }
 
-
-
-
     private void decreaseStockAndUpdateStatus(Product product, int quantity) {
-        int remainingStock = product.getStock() - quantity;
-        product.setStock(remainingStock);
-
-        if (product.getStatus() != ProductStatus.DISCONTINUED) {
-            product.setStatus(resolveStatusByStock(remainingStock));
-        }
-    }
-
-    private ProductStatus resolveStatusByStock(int stock) {
-        return (stock == 0) ? ProductStatus.SOLD_OUT : ProductStatus.ON_SALE;
+        product.updateStock(-quantity);
     }
 
 // ==========================================================
@@ -228,17 +216,8 @@ public class OrderService {
         return "ORD-" + datePart + "-" + randomPart;
     }
     private void restoreStockAndUpdateStatus(Product product, int quantity) {
-        int restoredStock = product.getStock() + quantity;
-        product.setStock(restoredStock);
-
-        // 단종 상품은 재고가 복구돼도 단종 상태 유지
-        if (product.getStatus() != ProductStatus.DISCONTINUED) {
-            product.setStatus(resolveStatusByStock(restoredStock));
-        }
+        product.updateStock(quantity);
     }
-
-
-
 }
 
 

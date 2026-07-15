@@ -2,6 +2,8 @@ package com.example.admindashboardproject.order.entity;
 
 import com.example.admindashboardproject.BaseEntity;
 import com.example.admindashboardproject.admin.entity.Admins;
+import com.example.admindashboardproject.customer.entity.Customer;
+import com.example.admindashboardproject.product.entity.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -18,7 +18,7 @@ public class AdminManageController {
 
     // 관리자 리스트 조회
     @GetMapping
-    public ResponseEntity<PageResponse<AdminDetailResponse>> getAdminList(@ModelAttribute AdminSearchRequest condition) {
+    public ResponseEntity<PageResponse<AdminBaseResponse>> getAdminList(@ModelAttribute AdminSearchRequest condition) {
         return ResponseEntity.ok(service.getAdminList(condition));
     }
 
@@ -30,21 +30,20 @@ public class AdminManageController {
 
     // 관리자 정보 수정
     @PatchMapping("/{id}")
-    public ResponseEntity<AdminDetailResponse> updateAdmin(@PathVariable Long id,
-                                                           @Valid @RequestBody AdminUpdateRequest request) {
+    public ResponseEntity<AdminBaseResponse> updateAdmin(@PathVariable Long id, @Valid @RequestBody AdminUpdateRequest request) {
         return ResponseEntity.ok(service.updateAdmin(id, request));
     }
 
     // 관리자 역할 변경
     @PatchMapping("/{id}/role")
-    public ResponseEntity<AdminDetailResponse> changeAdminRole(@PathVariable Long id,
+    public ResponseEntity<AdminBaseResponse> changeAdminRole(@PathVariable Long id,
                                                                @Valid @RequestBody AdminRoleUpdateRequest request) {
         return ResponseEntity.ok(service.changeAdminRole(id, request));
     }
 
     // 관리자 상태 변경
     @PatchMapping("/{id}/status")
-    public ResponseEntity<AdminDetailResponse> changeAdminStatus(@PathVariable Long id,
+    public ResponseEntity<AdminBaseResponse> changeAdminStatus(@PathVariable Long id,
                                                                  @Valid @RequestBody AdminStatusUpdateRequest request) {
         return ResponseEntity.ok(service.changeAdminStatus(id, request));
     }
@@ -58,13 +57,13 @@ public class AdminManageController {
 
     // 관리자 승인
     @PatchMapping("/{id}/approve")
-    public ResponseEntity<AdminDetailResponse> approveAdmin(@PathVariable Long id) {
+    public ResponseEntity<AdminBaseResponse> approveAdmin(@PathVariable Long id) {
         return ResponseEntity.ok(service.approveAdmin(id));
     }
 
     // 관리자 거부
     @PatchMapping("/{id}/reject")
-    public ResponseEntity<AdminDetailResponse> rejectAdmin(@PathVariable Long id,
+    public ResponseEntity<AdminBaseResponse> rejectAdmin(@PathVariable Long id,
                                                            @Valid @RequestBody AdminRejectRequest request) {
         return ResponseEntity.ok(service.rejectAdmin(id, request));
     }
@@ -80,15 +79,15 @@ public class AdminManageController {
 
     // 내 프로필 조회
     @GetMapping("/me")
-    public ResponseEntity<AdminDetailResponse> getMyProfile(HttpSession session) {
+    public ResponseEntity<AdminBaseResponse> getMyProfile(HttpSession session) {
         SessionAdmin loginadmin = getLoginAdmin(session);
 
-        return ResponseEntity.ok(service.getAdminDetail(loginadmin.getId()));
+        return ResponseEntity.ok(service.getAdminBase(loginadmin.getId()));
     }
 
     // 내 프로필 수정
     @PatchMapping("/me")
-    public ResponseEntity<AdminDetailResponse> updateMyProfile(HttpSession session,
+    public ResponseEntity<AdminBaseResponse> updateMyProfile(HttpSession session,
                                                                @Valid @RequestBody AdminUpdateRequest request) {
         SessionAdmin loginadmin = getLoginAdmin(session);
         return ResponseEntity.ok(service.updateAdmin(loginadmin.getId(), request));

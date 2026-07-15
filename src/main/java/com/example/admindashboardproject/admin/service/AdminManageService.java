@@ -28,7 +28,7 @@ public class AdminManageService {
 
 
     // 관리자 리스트 조회
-    public PageResponse<AdminDetailResponse> getAdminList(AdminSearchRequest condition) {
+    public PageResponse<AdminBaseResponse> getAdminList(AdminSearchRequest condition) {
         Sort.Direction direction = "asc".equalsIgnoreCase(condition.getSortOrder())
                 ? Sort.Direction.ASC
                 : Sort.Direction.DESC;
@@ -44,7 +44,7 @@ public class AdminManageService {
         );
 
         Page<Admins> adminsPage = repository.findAll(spec, pageable);
-        Page<AdminDetailResponse> responsePage = adminsPage.map(this::toDetailResponse);
+        Page<AdminBaseResponse> responsePage = adminsPage.map(this::toBaseResponse);
 
         return new PageResponse<>(responsePage);
     }
@@ -62,6 +62,19 @@ public class AdminManageService {
         );
     }
 
+
+    private AdminBaseResponse toBaseResponse(Admins admins){
+        return new AdminBaseResponse(
+                admins.getId(),
+                admins.getName(),
+                admins.getEmail(),
+                admins.getPhone(),
+                admins.getRole(),
+                admins.getStatus(),
+                admins.getCreatedAt()
+        );
+    }
+
     // 관리자 상세 조회
     public AdminDetailResponse getAdminDetail(Long id){
         Admins admins = repository.findById(id)
@@ -71,7 +84,7 @@ public class AdminManageService {
 
     // 관리자 정보 수정
     @Transactional
-    public AdminDetailResponse updateAdmin(Long id, AdminUpdateRequest request){
+    public AdminBaseResponse updateAdmin(Long id, AdminUpdateRequest request){
         Admins admins = repository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
 
@@ -80,27 +93,27 @@ public class AdminManageService {
         }
 
         admins.updateInfo(request.getName(), request.getEmail(),  request.getPhone());
-        return toDetailResponse(admins);
+        return toBaseResponse(admins);
     }
 
     // 관리자 역할 변경
     @Transactional
-    public AdminDetailResponse changeAdminRole(Long id, AdminRoleUpdateRequest request){
+    public AdminBaseResponse changeAdminRole(Long id, AdminRoleUpdateRequest request){
         Admins admins = repository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
 
         admins.changeRole(request.getRole());
-        return toDetailResponse(admins);
+        return toBaseResponse(admins);
     }
 
     // 관리자 상태 변경
     @Transactional
-    public AdminDetailResponse changeAdminStatus(Long id, AdminStatusUpdateRequest request){
+    public AdminBaseResponse changeAdminStatus(Long id, AdminStatusUpdateRequest request){
         Admins admins = repository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
 
         admins.changeStatus(request.getStatus());
-        return toDetailResponse(admins);
+        return toBaseResponse(admins);
     }
 
     // 관리자 삭제
@@ -114,22 +127,22 @@ public class AdminManageService {
 
     // 관리자 승인
     @Transactional
-    public AdminDetailResponse approveAdmin(Long id){
+    public AdminBaseResponse approveAdmin(Long id){
         Admins admins = repository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자 입니다."));
 
         admins.approve();
-        return toDetailResponse(admins);
+        return toBaseResponse(admins);
     }
 
     // 관리자 거부
     @Transactional
-    public AdminDetailResponse rejectAdmin(Long id, AdminRejectRequest request){
+    public AdminBaseResponse rejectAdmin(Long id, AdminRejectRequest request){
         Admins admins = repository.findById(id)
                 .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
 
         admins.reject(request.getRejectReason());
-        return toDetailResponse(admins);
+        return toBaseResponse(admins);
     }
 
     // 비밀번호 변경
@@ -142,5 +155,12 @@ public class AdminManageService {
             throw new InvalidCredentialException("현재 비밀번호가 일치하지 않습니다.");
         }
         admins.changePassword(passwordEncoder.encode(request.getNewPassword()));
+    }
+
+
+    public AdminBaseResponse getAdminBase(Long id){
+        Admins admins = repository.findById(id)
+                .orElseThrow(() -> new AdminNotFoundException("존재하지 않는 관리자입니다."));
+        return toBaseResponse(admins);
     }
 }

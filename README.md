@@ -126,7 +126,7 @@ Response Body
 
 | 항목 | 내용                                                            |
 |------|---------------------------------------------------------------|
-| URL | `PUT /admins/{adminId}`                                       |
+| URL | `PATCH /admins/{adminId}`                                       |
 | 설명 | 관리자 정보를 수정합니다.                                                |
 | Request Body | `name`, `email`, `phone`                                      |
 | Response | `200 OK`                                                      |
@@ -288,7 +288,7 @@ Response Body
 
 | 항목 | 내용 |
 |------|------|
-| URL | `PUT /admins/me` |
+| URL | `PATCH /admins/me` |
 | 설명 | 로그인한 관리자의 프로필 정보를 수정합니다. |
 | Request Body | `name`, `email`, `phone` |
 | Response | `200 OK` |
@@ -313,7 +313,7 @@ Response Body
 
 | 항목 | 내용 |
 |------|------|
-| URL | `PUT /admins/me/password` |
+| URL | `PATCH/admins/me/password` |
 | 설명 | 로그인한 관리자의 비밀번호를 변경합니다. |
 | Request Body | `currentPassword`, `newPassword`, `confirmPassword` |
 | Response | `200 OK` |
@@ -386,7 +386,17 @@ Response Body
 | Response Body | `id`, `name`, `email`, `phone`, `status`, `updatedAt` |
 | Error | `400 Bad Request`, `404 Not Found`, `409 Conflict` |
 | 비고 | 변경할 정보만 전달하여 수정할 수 있습니다. |
-
+Response Body
+```json
+{
+"id": 1,
+"name": "홍길동",
+"email": "admin@example.com",
+"phone": "010-1234-5678",
+"status": "승인대기",
+"updatedAt": " 2026-07-13T13:00:00"
+}
+```
 ---
 
 ## 4. 고객 상태 변경

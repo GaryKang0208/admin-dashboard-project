@@ -10,12 +10,12 @@ public interface OrderRepository extends JpaRepository<Orders,Long> {
 
     Page<Orders> findAll(Pageable pageable);
     Page<Orders> findByStatus(OrderStatus status, Pageable pageable);
-    Page<Orders> findByOrderNumberContainingOrCustomerCustomerNameContaining(
+    Page<Orders> findByOrderNumberContainingOrCustomerNameContaining(
             String orderNumber,
             String customerName,
             Pageable pageable
     );
-    Page<Orders> findByStatusAndOrderNumberContainingOrStatusAndCustomerCustomerNameContaining(
+    Page<Orders> findByStatusAndOrderNumberContainingOrStatusAndCustomerNameContaining(
             OrderStatus status1,
             String orderNumber,
             OrderStatus status2,

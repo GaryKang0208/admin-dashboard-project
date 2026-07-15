@@ -31,6 +31,7 @@ public class ProductService {
     // 상품 등록
     @Transactional
     public ProductResponse register(ProductCreateRequest request,Long adminId){
+
         // 재고-상태 검증
         if (request.stock() > 0 && request.status() == ProductStatus.SOLD_OUT){
             throw new InvalidProductStatusException("재고가 있는 상품은 품절 상태로 등록할 수 없습니다.");
@@ -54,6 +55,7 @@ public class ProductService {
         Product saved = productRepository.save(product);
         return ProductResponse.from(saved);
     }
+
     // 상품 리스트 조회 (조회 전용)
     public PageResponse<ProductResponse> getProducts(
             String keyword,
@@ -82,6 +84,7 @@ public class ProductService {
 
         return PageResponse.from(responsePage);
     }
+
     // 상품 상세 조회
     @Transactional
     public ProductResponse getProduct(Long id) {
@@ -89,6 +92,7 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
         return ProductResponse.from(product);
     }
+
     // 상품 정보 수정
     @Transactional
     public ProductResponse update(Long id, ProductUpdateRequest request) {
@@ -99,6 +103,7 @@ public class ProductService {
         // save() 호출 없이도, 트랜잭션 종료 시 JPA가 변경분을 감지해 자동으로 UPDATE 실행 (더티 체킹)
         return ProductResponse.from(product);
     }
+
     // 상품 재고 변경
     @Transactional
     public ProductResponse updateStock(Long id, ProductStockUpdateRequest request) {
@@ -110,6 +115,7 @@ public class ProductService {
         return ProductResponse.from(product);
         // 더티 체킹으로 자동 UPDATE - save() 호출 불필요
     }
+
     // 상품 상태 변경 (사용자가 보낸 값으로 단순 교체)
     @Transactional
     public ProductResponse updateStatus(Long id, ProductStatusUpdateRequest request) {
@@ -121,6 +127,7 @@ public class ProductService {
         return ProductResponse.from(product);
         // 더티 체킹으로 자동 UPDATE - save() 호출 불필요
     }
+
     // 상품 삭제
     @Transactional
     public void delete(Long id) {
@@ -129,7 +136,4 @@ public class ProductService {
 
         productRepository.delete(product);
     }
-
-
-
 }

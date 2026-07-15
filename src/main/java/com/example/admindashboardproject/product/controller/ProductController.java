@@ -1,8 +1,10 @@
 package com.example.admindashboardproject.product.controller;
 
 import com.example.admindashboardproject.admin.dto.SessionAdmin;
+import com.example.admindashboardproject.product.dto.PageResponse;
 import com.example.admindashboardproject.product.dto.ProductCreateRequest;
 import com.example.admindashboardproject.product.dto.ProductResponse;
+import com.example.admindashboardproject.product.entity.ProductStatus;
 import com.example.admindashboardproject.product.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -36,5 +38,20 @@ public class ProductController {
 
         ProductResponse response = productService.register(request, adminId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+    @GetMapping
+    public ResponseEntity<PageResponse<ProductResponse>> getProducts(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false)ProductStatus status,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDirection
+            ){
+        PageResponse<ProductResponse> response = productService.getProducts(
+                keyword, category, status, page, size, sortBy, sortDirection
+        );
+        return ResponseEntity.ok(response);
     }
 }

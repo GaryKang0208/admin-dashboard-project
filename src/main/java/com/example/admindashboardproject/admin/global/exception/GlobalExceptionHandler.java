@@ -56,10 +56,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInvalidProductStatus(InvalidProductStatusException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
-    @ExceptionHandler(AdminNotFoundException.class)
-    public ResponseEntity<String> handleAdminNotFound(AdminNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
+
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<String> handleProductNotFound(ProductNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

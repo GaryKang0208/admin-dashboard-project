@@ -45,7 +45,7 @@ public class Admins extends BaseEntity {
     private LocalDateTime rejectedAt;
 
     @Column(columnDefinition = "TEXT")
-    private LocalDateTime rejectReason;
+    private String rejectReason; // <- 거부 사유라 LocalDateTime에서 String으로 수정
 
     public Admins(String name, String email, String password, String phone, Role role) {
         this.name = name;
@@ -55,4 +55,36 @@ public class Admins extends BaseEntity {
         this.role = role;
         this.status = Status.PENDING; // 회원 가입시 승인대기 상태를 기본값으로
     }
+
+    // 관리자 정보 관리 비즈니스 메서드
+    public void updateInfo(String name, String email, String phone) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+    }
+
+    public void changeRole(Role role) {
+        this.role = role;
+    }
+
+    public void changeStatus(Status status) {
+        this.status = status;
+    }
+
+    public void approve() {
+        this.status = Status.ACTIVE;
+        this.approvedAt = LocalDateTime.now();
+    }
+
+    public void reject(String reason) {
+        this.status = Status.REJECTED;
+        this.rejectedAt = LocalDateTime.now();
+        this.rejectReason = reason;
+    }
+
+    public void changePassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
+
+
 }

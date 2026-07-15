@@ -5,6 +5,7 @@ import com.example.admindashboardproject.admin.entity.Role;
 import com.example.admindashboardproject.admin.global.exception.InvalidCredentialException;
 import com.example.admindashboardproject.order.dto.CreateRequest;
 import com.example.admindashboardproject.order.dto.CreateResponse;
+import com.example.admindashboardproject.order.dto.GetOrderDetailResponse;
 import com.example.admindashboardproject.order.dto.ListGetOrderResponse;
 import com.example.admindashboardproject.order.entity.OrderStatus;
 import com.example.admindashboardproject.order.exception.InvalidQuantityException;
@@ -50,6 +51,14 @@ public class OrderController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GetOrderDetailResponse> getOrderDetail(@PathVariable Long id) {
+        GetOrderDetailResponse response = orderService.getOrderDetail(id);
+        return ResponseEntity.ok(response);
+    }
+
+
 
 
 

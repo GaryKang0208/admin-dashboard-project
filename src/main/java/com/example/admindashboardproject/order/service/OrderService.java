@@ -94,6 +94,28 @@ public class OrderService {
     }
 
 
+    public GetOrderDetailResponse getOrderDetail(Long id) {
+        Orders order = orderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("주문을 찾을 수 없습니다."));
+
+        Admins admin = order.getAdmin(); // null이면 고객 직접 주문
+
+        return new GetOrderDetailResponse(
+                order.getOrderNumber(),
+                order.getCustomer().getName(),
+                order.getCustomer().getEmail(),
+                order.getProduct().getName(),
+                order.getQuantity(),
+                order.getTotalPrice(),
+                order.getCreatedAt(),
+                order.getStatus(),
+                admin != null ? admin.getName() : null,
+                admin != null ? admin.getEmail() : null,
+                admin != null ? admin.getRole().name() : null
+        );
+    }
+
+
 
 
 
@@ -125,16 +147,6 @@ public class OrderService {
             default -> "createdAt";
         };
     }
-}
-
-
-
-
-
-
-
-
-
 
 
 
@@ -152,7 +164,7 @@ public class OrderService {
         return (stock == 0) ? ProductStatus.SOLD_OUT : ProductStatus.ON_SALE;
     }
 
-    // ==========================================================
+// ==========================================================
 
     private void validateOrderRequest(Product product, Integer quantity) {
         if (quantity < 1) {
@@ -168,7 +180,6 @@ public class OrderService {
             throw new InvalidQuantityException("재고가 부족합니다.");
         }
     }
-
     private String generateOrderNumber() {
         String datePart = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
         String randomPart = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
@@ -178,6 +189,13 @@ public class OrderService {
 
 
 }
+
+
+
+
+
+
+
 
 
 

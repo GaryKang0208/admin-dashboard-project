@@ -1,5 +1,6 @@
 package com.example.admindashboardproject.product.service;
 
+import com.example.admindashboardproject.product.dto.ProductStockUpdateRequest;
 import com.example.admindashboardproject.product.dto.ProductUpdateRequest;
 import com.example.admindashboardproject.product.exception.ProductNotFoundException;
 import com.example.admindashboardproject.product.dto.PageResponse;
@@ -102,6 +103,18 @@ public class ProductService {
         // save() 호출 없이도, 트랜잭션 종료 시 JPA가 변경분을 감지해 자동으로 UPDATE 실행 (더티 체킹)
         return ProductResponse.from(product);
     }
+    // 상품 재고 변경
+    @Transactional
+    public ProductResponse updateStock(Long id, ProductStockUpdateRequest request) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
+
+        product.updateStock(request.stock()); // 증감 처리 + 상태 자동 전환은 Entity 안에서 다 처리됨
+
+        return ProductResponse.from(product);
+        // 더티 체킹으로 자동 UPDATE - save() 호출 불필요
+    }
+
 
 
 }

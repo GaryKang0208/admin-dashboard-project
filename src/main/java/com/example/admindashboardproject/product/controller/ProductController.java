@@ -1,10 +1,7 @@
 package com.example.admindashboardproject.product.controller;
 
 import com.example.admindashboardproject.admin.dto.SessionAdmin;
-import com.example.admindashboardproject.product.dto.PageResponse;
-import com.example.admindashboardproject.product.dto.ProductCreateRequest;
-import com.example.admindashboardproject.product.dto.ProductResponse;
-import com.example.admindashboardproject.product.dto.ProductUpdateRequest;
+import com.example.admindashboardproject.product.dto.*;
 import com.example.admindashboardproject.product.entity.ProductStatus;
 import com.example.admindashboardproject.product.service.ProductService;
 import jakarta.servlet.http.HttpSession;
@@ -67,6 +64,15 @@ public class ProductController {
     public ResponseEntity<ProductResponse> update(
             @PathVariable Long productId, @RequestBody ProductUpdateRequest request){
         ProductResponse response = productService.update(productId, request);
+        return ResponseEntity.ok(response);
+    }
+    // 상품 재고 변경
+    @PatchMapping("/{productId}/stock")
+    public ResponseEntity<ProductResponse> updateStock(
+            @PathVariable Long productId,
+            @RequestBody ProductStockUpdateRequest request
+    ) {
+        ProductResponse response = productService.updateStock(productId, request);
         return ResponseEntity.ok(response);
     }
 }

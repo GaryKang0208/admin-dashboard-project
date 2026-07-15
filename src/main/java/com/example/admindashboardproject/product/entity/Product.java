@@ -1,5 +1,6 @@
 package com.example.admindashboardproject.product.entity;
 
+import com.example.admindashboardproject.product.exception.InvalidStockException;
 import com.example.admindashboardproject.BaseEntity;
 import com.example.admindashboardproject.admin.entity.Admins;
 import jakarta.persistence.*;
@@ -53,5 +54,26 @@ public class Product extends BaseEntity {
         if (price != null) {
             this.price = price;
         }
+    }
+    public void updateStatusByStock(){
+        if (this.status == ProductStatus.DISCONTINUED){
+            return;
+        }
+        if (this.stock == 0){
+            this.status = ProductStatus.SOLD_OUT;
+        }
+        else {
+            this.status = ProductStatus.SELLING;
+        }
+    }
+    public void updateStock(int quantity) {
+        int newStock = this.stock + quantity; // 증감값을 현재 재고에 더함(음수면 자동 차감)
+
+        if (newStock < 0) {
+            throw new InvalidStockException("재고는 0 미만이 될 수 없습니다.");
+        }
+
+        this.stock = newStock;
+        updateStatusByStock(); // 이미 있는 메서드를 그대로 재사용해서 상태 재계산
     }
 }

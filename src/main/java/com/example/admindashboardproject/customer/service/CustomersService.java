@@ -38,13 +38,24 @@ public class CustomersService {
                 sort
         );
         Page<Customer> customerPage;
-        if (request.getKeyword() != null && !request.getKeyword().isBlank()) {
+        if (request.getKeyword() != null && !request.getKeyword().isBlank() && request.getStatus() !=null) {
+            customerPage = customerRepository.findByKeywordAndStatus(
+                    request.getKeyword(),
+                    request.getStatus(),
+                    pageable
+            );
+        } else if (request.getKeyword() !=null && !request.getKeyword().isBlank()) {
             customerPage = customerRepository.findByNameContainingOrEmailContaining(
                     request.getKeyword(),
                     request.getKeyword(),
                     pageable
             );
-        }else {
+        }else if (request.getStatus() != null){
+            customerPage = customerRepository.findByStatus(
+                    request.getStatus(),
+                    pageable
+            );
+        } else {
             customerPage=customerRepository.findAll(pageable);
           }
         List<CustomerResponse> customerResponseList =new ArrayList<>();

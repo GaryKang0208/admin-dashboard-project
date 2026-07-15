@@ -11,8 +11,8 @@ public class CustomerSearchRequest {
         private String keyword;
         private int page =1;
         private int size =10;
-        private String sortBy ="createdAt";
-        private String direction="desc";
-        private CustomerStatus status;
+        private String sortBy ="name";
+        private String direction="asc";
+        private CustomerStatus status = CustomerStatus.ACTIVE;
 
 }

@@ -1,7 +1,14 @@
-package com.example.admindashboardproject.admin.global.exception;
+package com.example.admindashboardproject;
 
 
 
+import com.example.admindashboardproject.admin.global.exception.DuplicateEmailException;
+import com.example.admindashboardproject.admin.global.exception.ErrorResponse;
+import com.example.admindashboardproject.admin.global.exception.InvalidCredentialException;
+import com.example.admindashboardproject.admin.global.exception.InvalidStatus;
+import com.example.admindashboardproject.order.exception.InvalidQuantityException;
+import com.example.admindashboardproject.order.exception.NotFoundException;
+import com.example.admindashboardproject.order.exception.ProductException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,6 +50,29 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse(e.getErrorCode().name(), e.getMessage()));
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleAccountNotActive(NotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse("NOT FOUND", e.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidQuantityException.class)
+    public ResponseEntity<ErrorResponse> handleAccountNotActive(InvalidQuantityException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse("Quantity Error", e.getMessage()));
+    }
+
+    @ExceptionHandler(ProductException.class)
+    public ResponseEntity<ErrorResponse> handleAccountNotActive(ProductException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse("Product Status Error", e.getMessage()));
+    }
+
+
+
+
+
 
     // 그 외 예상 못 한 예외 - 최후의 방어선
     @ExceptionHandler(Exception.class)

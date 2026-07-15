@@ -76,4 +76,8 @@ public class Product extends BaseEntity {
         this.stock = newStock;
         updateStatusByStock(); // 이미 있는 메서드를 그대로 재사용해서 상태 재계산
     }
+    // 상태를 사용자가 보낸 값으로 그대로 교체 (검증 없음)
+    public void changeStatus(ProductStatus status) {
+        this.status = status;
+    }
 }

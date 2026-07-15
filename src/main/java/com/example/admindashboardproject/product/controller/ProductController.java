@@ -75,4 +75,13 @@ public class ProductController {
         ProductResponse response = productService.updateStock(productId, request);
         return ResponseEntity.ok(response);
     }
+    // 상품 상태 변경
+    @PatchMapping("/{productId}/status")
+    public ResponseEntity<ProductResponse> updateStatus(
+            @PathVariable Long productId,
+            @Valid @RequestBody ProductStatusUpdateRequest request
+    ) {
+        ProductResponse response = productService.updateStatus(productId, request);
+        return ResponseEntity.ok(response);
+    }
 }

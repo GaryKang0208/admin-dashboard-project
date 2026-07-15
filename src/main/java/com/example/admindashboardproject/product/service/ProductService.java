@@ -1,9 +1,7 @@
 package com.example.admindashboardproject.product.service;
 
-import com.example.admindashboardproject.product.dto.ProductStockUpdateRequest;
-import com.example.admindashboardproject.product.dto.ProductUpdateRequest;
+import com.example.admindashboardproject.product.dto.*;
 import com.example.admindashboardproject.product.exception.ProductNotFoundException;
-import com.example.admindashboardproject.product.dto.PageResponse;
 import com.example.admindashboardproject.product.repository.ProductSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,8 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import com.example.admindashboardproject.admin.entity.Admins;
 import com.example.admindashboardproject.admin.repository.AdminRepository;
-import com.example.admindashboardproject.product.dto.ProductCreateRequest;
-import com.example.admindashboardproject.product.dto.ProductResponse;
 import com.example.admindashboardproject.product.entity.Product;
 import com.example.admindashboardproject.product.entity.ProductStatus;
 import com.example.admindashboardproject.product.exception.AdminNotFoundException;
@@ -110,6 +106,17 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
 
         product.updateStock(request.stock()); // 증감 처리 + 상태 자동 전환은 Entity 안에서 다 처리됨
+
+        return ProductResponse.from(product);
+        // 더티 체킹으로 자동 UPDATE - save() 호출 불필요
+    }
+    // 상품 상태 변경 (사용자가 보낸 값으로 단순 교체)
+    @Transactional
+    public ProductResponse updateStatus(Long id, ProductStatusUpdateRequest request) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
+
+        product.changeStatus(request.status()); // 검증 없이 그대로 교체
 
         return ProductResponse.from(product);
         // 더티 체킹으로 자동 UPDATE - save() 호출 불필요

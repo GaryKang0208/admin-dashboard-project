@@ -4,6 +4,7 @@ import com.example.admindashboardproject.admin.dto.SessionAdmin;
 import com.example.admindashboardproject.product.dto.PageResponse;
 import com.example.admindashboardproject.product.dto.ProductCreateRequest;
 import com.example.admindashboardproject.product.dto.ProductResponse;
+import com.example.admindashboardproject.product.dto.ProductUpdateRequest;
 import com.example.admindashboardproject.product.entity.ProductStatus;
 import com.example.admindashboardproject.product.service.ProductService;
 import jakarta.servlet.http.HttpSession;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
 
     private final ProductService productService;
-
+    // 상품 등록
     @PostMapping
     public ResponseEntity<ProductResponse> register(
             @Valid @RequestBody ProductCreateRequest request,
@@ -39,6 +40,7 @@ public class ProductController {
         ProductResponse response = productService.register(request, adminId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+    // 상품 리스트 조회
     @GetMapping
     public ResponseEntity<PageResponse<ProductResponse>> getProducts(
             @RequestParam(required = false) String keyword,
@@ -54,9 +56,17 @@ public class ProductController {
         );
         return ResponseEntity.ok(response);
     }
+    // 상품 상세 조회
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponse> getProduct(@PathVariable Long productId) {
         ProductResponse response = productService.getProduct(productId);
+        return ResponseEntity.ok(response);
+    }
+    // 상품 정보 수정
+    @PatchMapping("/{productId}")
+    public ResponseEntity<ProductResponse> update(
+            @PathVariable Long productId, @RequestBody ProductUpdateRequest request){
+        ProductResponse response = productService.update(productId, request);
         return ResponseEntity.ok(response);
     }
 }

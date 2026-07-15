@@ -1,7 +1,8 @@
 package com.example.admindashboardproject.product.service;
 
+import com.example.admindashboardproject.product.dto.ProductUpdateRequest;
 import com.example.admindashboardproject.product.exception.ProductNotFoundException;
-import com.example.admindashboardproject.product.dto.PageResponse; // common이 아니라 product.dto!
+import com.example.admindashboardproject.product.dto.PageResponse;
 import com.example.admindashboardproject.product.repository.ProductSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,8 +31,10 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final AdminRepository adminRepository;
 
+    // 상품 등록
     @Transactional
     public ProductResponse register(ProductCreateRequest request,Long adminId){
+        // 재고-상태 검증
         if (request.stock() > 0 && request.status() == ProductStatus.SOLD_OUT){
             throw new InvalidProductStatusException("재고가 있는 상품은 품절 상태로 등록할 수 없습니다.");
         }
@@ -54,7 +57,7 @@ public class ProductService {
         Product saved = productRepository.save(product);
         return ProductResponse.from(saved);
     }
-    // 조회 전용
+    // 상품 리스트 조회 (조회 전용)
     public PageResponse<ProductResponse> getProducts(
             String keyword,
             String category,
@@ -82,9 +85,21 @@ public class ProductService {
 
         return PageResponse.from(responsePage);
     }
+    // 상품 상세 조회
+    @Transactional
     public ProductResponse getProduct(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
+        return ProductResponse.from(product);
+    }
+    // 상품 정보 수정
+    @Transactional
+    public ProductResponse update(Long id, ProductUpdateRequest request) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
+        // 요청에 값이 있는 필드만 반영
+        product.update(request.name(), request.category(), request.price());
+        // save() 호출 없이도, 트랜잭션 종료 시 JPA가 변경분을 감지해 자동으로 UPDATE 실행 (더티 체킹)
         return ProductResponse.from(product);
     }
 

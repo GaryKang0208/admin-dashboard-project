@@ -42,4 +42,16 @@ public class Product extends BaseEntity {
         this.status = status;
         this.registeredAdmin = registeredAdmin;
     }
+    public void update(String name, String category, Integer price) {
+        // 요청 값이 null이 아닐 때만 필드를 바꿈
+        if (name != null) {
+            this.name = name;
+        }
+        if (category != null) {
+            this.category = category;
+        }
+        if (price != null) {
+            this.price = price;
+        }
+    }
 }

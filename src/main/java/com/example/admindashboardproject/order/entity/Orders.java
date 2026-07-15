@@ -43,6 +43,8 @@ public class Orders extends BaseEntity {
     @Column(nullable = false)
     private Integer totalPrice;
 
+
+    @Enumerated(EnumType.STRING)
     @Column(length = 50 ,nullable = false)
     private OrderStatus status;
 

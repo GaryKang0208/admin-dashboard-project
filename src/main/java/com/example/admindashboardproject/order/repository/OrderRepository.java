@@ -22,4 +22,8 @@ public interface OrderRepository extends JpaRepository<Orders,Long> {
             String customerName,
             Pageable pageable
     );
+
+
+
+    void deleteByCustomer_Id(Long customerId);
 }

@@ -25,7 +25,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/create")
-    public ResponseEntity<CreateResponse> createOrder(@Valid @RequestBody
+    public ResponseEntity<CreateResponse> createOrder(@RequestBody
                                                       CreateRequest request, HttpSession session){
         SessionAdmin loginAdmin =getCsAdmin(session);
         CreateResponse saved =  orderService.create(request, loginAdmin.getId());

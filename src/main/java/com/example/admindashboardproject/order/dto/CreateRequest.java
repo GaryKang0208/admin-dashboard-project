@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class CreateRequest {
 
-    @NotNull
+    @NotBlank
     private  Long customerId;
 
     @NotBlank

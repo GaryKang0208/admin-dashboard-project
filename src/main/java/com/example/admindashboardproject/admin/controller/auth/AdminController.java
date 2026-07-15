@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/commerce/admins")
 
+// 회원가입/로그인/로그아웃
 public class AdminController {
     private final AdminService service;
 
@@ -34,7 +35,7 @@ public class AdminController {
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody AdminLoginRequest request, HttpSession session) {
 
-        SessionAdmin sessionAdmin = service.loginadmin(request);
+        SessionAdmin sessionAdmin = service.login(request);
         session.setAttribute("loginAdmin", sessionAdmin);
         return ResponseEntity.ok().build();
     }

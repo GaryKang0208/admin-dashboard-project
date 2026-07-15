@@ -1,0 +1,7 @@
+package com.example.admindashboardproject.product.exception;
+
+public class InvalidStockException extends RuntimeException {
+    public InvalidStockException(String message) {
+        super(message);
+    }
+}

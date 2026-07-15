@@ -121,6 +121,14 @@ public class ProductService {
         return ProductResponse.from(product);
         // 더티 체킹으로 자동 UPDATE - save() 호출 불필요
     }
+    // 상품 삭제
+    @Transactional
+    public void delete(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
+
+        productRepository.delete(product);
+    }
 
 
 

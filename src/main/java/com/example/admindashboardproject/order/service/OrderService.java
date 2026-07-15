@@ -18,7 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDate;;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
@@ -137,19 +137,34 @@ public class OrderService {
 
     }
 
+    @Transactional
+    public CancelResponse cancelOrder(Long id, String cancelReason) {
+        Orders order = orderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("주문을 찾을 수 없습니다."));
 
+        if (cancelReason == null || cancelReason.isBlank()) {
+            throw new InvalidCancelException("취소 사유는 필수입니다.");
+        }
 
+        if (order.getStatus() != OrderStatus.PREPARING) {
+            throw new InvalidCancelException("준비중 상태에서만 취소할 수 있습니다.");
+        }
 
+        order.cancel(cancelReason);
 
+        Product product = order.getProduct();
+        restoreStockAndUpdateStatus(product, order.getQuantity());
+        productRepository.save(product);
 
+        Orders saved = orderRepository.save(order);
 
-
-
-
-
-
-
-
+        return new CancelResponse(
+                saved.getId(),
+                saved.getOrderNumber(),
+                saved.getStatus(),
+                saved.getCancelReason()
+        );
+    }
 
 
     private GetOrderResponse toResponse(Orders order) {
@@ -211,6 +226,15 @@ public class OrderService {
         String datePart = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
         String randomPart = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         return "ORD-" + datePart + "-" + randomPart;
+    }
+    private void restoreStockAndUpdateStatus(Product product, int quantity) {
+        int restoredStock = product.getStock() + quantity;
+        product.setStock(restoredStock);
+
+        // 단종 상품은 재고가 복구돼도 단종 상태 유지
+        if (product.getStatus() != ProductStatus.DISCONTINUED) {
+            product.setStatus(resolveStatusByStock(restoredStock));
+        }
     }
 
 

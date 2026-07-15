@@ -27,7 +27,7 @@ public class OrderController {
     @PostMapping("/create")
     public ResponseEntity<CreateResponse> createOrder(@Valid @RequestBody
                                                       CreateRequest request, HttpSession session){
-        SessionAdmin loginAdmin =getCSadmin(session);
+        SessionAdmin loginAdmin =getCsAdmin(session);
         CreateResponse saved =  orderService.create(request, loginAdmin.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
 
@@ -56,9 +56,19 @@ public class OrderController {
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<UpdateStatusResponse> updateStatus(@PathVariable Long id, @RequestBody UpdateStatusRequest request
+    public ResponseEntity<UpdateStatusResponse> updateStatus(@PathVariable Long id, @RequestBody UpdateStatusRequest request,HttpSession session
     ) {
         UpdateStatusResponse response = orderService.updateStatus(id, request.getStatus());
+        return ResponseEntity.ok(response);
+    }
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<CancelResponse> cancelOrder(
+            @PathVariable Long id,
+            @RequestBody CancelRequest request,
+            HttpSession session
+    ) {
+        getCsAdmin(session); // 권한 검증만, 반환값은 안 씀
+        CancelResponse response = orderService.cancelOrder(id, request.getCancelReason());
         return ResponseEntity.ok(response);
     }
 

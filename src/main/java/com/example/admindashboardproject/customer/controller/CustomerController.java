@@ -19,9 +19,8 @@ public class CustomerController {
 
     @GetMapping//리스트 조회
     public ResponseEntity<List<CustomerResponse>> findAll(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String email){
-        List<CustomerResponse> one = customersService.findAll(name, email);
+            @ModelAttribute CustomerSearchRequest request){
+        List<CustomerResponse> one = customersService.findAll(request);
         return ResponseEntity.ok(one);
     }
 

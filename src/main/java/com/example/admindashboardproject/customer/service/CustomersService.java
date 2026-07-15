@@ -7,6 +7,10 @@ import com.example.admindashboardproject.customer.entity.Customer;
 import com.example.admindashboardproject.customer.exception.CustomerNotFoundException;
 import com.example.admindashboardproject.customer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,62 +25,43 @@ public class CustomersService {
     private final CustomerRepository customerRepository;
 
     @Transactional(readOnly = true)
-    public List<CustomerResponse> findAll(String name, String email) {
-        if (name != null&& !name.isBlank()) {
-            List<Customer> customerList = customerRepository.findByName(name);
-            List<CustomerResponse> customerResponseFindOneList = new ArrayList<>();
-
-            for (Customer customer : customerList) {
-                CustomerResponse customerResponse = new CustomerResponse(
-                        customer.getId(),
-                        customer.getName(),
-                        customer.getEmail(),
-                        customer.getPhone(),
-                        customer.getStatus(),
-                        customer.getTotalOrders(),
-                        customer.getTotalPurchaseAmount(),
-                        customer.getCreatedAt()
-                );
-                customerResponseFindOneList.add(customerResponse);
-            }
-            return customerResponseFindOneList;
-        } else if (email != null&&!email.isBlank()) {
-            List<Customer> customerList = customerRepository.findByEmail(email);
-            List<CustomerResponse> customerResponseFindOneList = new ArrayList<>();
-
-            for (Customer customer : customerList) {
-                CustomerResponse customerResponse = new CustomerResponse(
-                        customer.getId(),
-                        customer.getName(),
-                        customer.getEmail(),
-                        customer.getPhone(),
-                        customer.getStatus(),
-                        customer.getTotalOrders(),
-                        customer.getTotalPurchaseAmount(),
-                        customer.getCreatedAt()
-                );
-                customerResponseFindOneList.add(customerResponse);
-            }
-            return customerResponseFindOneList;
-          }else {
-            List<CustomerResponse> customerResponseFindOneList = new ArrayList<>();
-            List<Customer> customerList = customerRepository.findAll();
-            for (Customer customer : customerList) {
-                CustomerResponse customerResponse = new CustomerResponse(
-                        customer.getId(),
-                        customer.getName(),
-                        customer.getEmail(),
-                        customer.getPhone(),
-                        customer.getStatus(),
-                        customer.getTotalOrders(),
-                        customer.getTotalPurchaseAmount(),
-                        customer.getCreatedAt()
-                );
-                customerResponseFindOneList.add(customerResponse);
-            }
-            return customerResponseFindOneList;
+    public List<CustomerResponse> findAll(CustomerSearchRequest request) {
+        Sort sort;
+        if (request.getDirection().equals("asc")){
+            sort=Sort.by(request.getSortBy()).ascending();
+        }else {
+            sort=Sort.by(request.getSortBy()).descending();
+        }
+        Pageable pageable= PageRequest.of(
+                request.getPage() -1,
+                request.getSize(),
+                sort
+        );
+        Page<Customer> customerPage;
+        if (request.getKeyword() != null && !request.getKeyword().isBlank()) {
+            customerPage = customerRepository.findByNameContainingOrEmailContaining(
+                    request.getKeyword(),
+                    request.getKeyword(),
+                    pageable
+            );
+        }else {
+            customerPage=customerRepository.findAll(pageable);
           }
-
+        List<CustomerResponse> customerResponseList =new ArrayList<>();
+        for (Customer customer : customerPage.getContent()){
+            CustomerResponse customerResponse = new CustomerResponse(
+                    customer.getId(),
+                    customer.getName(),
+                    customer.getEmail(),
+                    customer.getPhone(),
+                    customer.getStatus(),
+                    customer.getTotalOrders(),
+                    customer.getTotalPurchaseAmount(),
+                    customer.getCreatedAt()
+            );
+            customerResponseList.add(customerResponse);
+        }
+        return customerResponseList;
     }
     //상세 조회
     @Transactional(readOnly = true)

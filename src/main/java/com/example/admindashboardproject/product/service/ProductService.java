@@ -1,5 +1,6 @@
 package com.example.admindashboardproject.product.service;
 
+import com.example.admindashboardproject.product.exception.ProductNotFoundException;
 import com.example.admindashboardproject.product.dto.PageResponse; // common이 아니라 product.dto!
 import com.example.admindashboardproject.product.repository.ProductSpecification;
 import org.springframework.data.domain.Page;
@@ -63,29 +64,28 @@ public class ProductService {
             String sortBy,
             String sortDirection
     ) {
-        // 1. 검색 조건 조립 (조건 없는 건 null -> 자동으로 무시됨)
         Specification<Product> spec = Specification
                 .where(ProductSpecification.hasKeyword(keyword))
                 .and(ProductSpecification.hasCategory(category))
                 .and(ProductSpecification.hasStatus(status));
 
-        // 2. 정렬 방향 결정 ("desc"일 때만 내림차순, 그 외엔 오름차순 기본값)
         Sort.Direction direction = "desc".equalsIgnoreCase(sortDirection)
                 ? Sort.Direction.DESC
                 : Sort.Direction.ASC;
         Sort sort = Sort.by(direction, sortBy);
 
-        // 3. 페이지 번호 보정 - 사용자는 1페이지부터, JPA는 0페이지부터
         Pageable pageable = PageRequest.of(page - 1, size, sort);
 
-        // 4. 실제 조회 실행
         Page<Product> productPage = productRepository.findAll(spec, pageable);
 
-        // 5. Page<Product> -> Page<ProductResponse> 변환
         Page<ProductResponse> responsePage = productPage.map(ProductResponse::from);
 
-        // 6. 우리 스펙에 맞는 PageResponse 형태로 감싸서 반환
         return PageResponse.from(responsePage);
+    }
+    public ProductResponse getProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
+        return ProductResponse.from(product);
     }
 
 

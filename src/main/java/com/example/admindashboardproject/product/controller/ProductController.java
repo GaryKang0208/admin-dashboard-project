@@ -54,4 +54,9 @@ public class ProductController {
         );
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable Long productId) {
+        ProductResponse response = productService.getProduct(productId);
+        return ResponseEntity.ok(response);
+    }
 }

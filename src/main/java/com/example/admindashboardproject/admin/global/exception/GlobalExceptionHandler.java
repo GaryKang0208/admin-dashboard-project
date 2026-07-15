@@ -2,6 +2,7 @@ package com.example.admindashboardproject.admin.global.exception;
 
 import com.example.admindashboardproject.product.exception.InvalidProductStatusException;
 import com.example.admindashboardproject.product.exception.AdminNotFoundException;
+import com.example.admindashboardproject.product.exception.ProductNotFoundException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,9 +56,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInvalidProductStatus(InvalidProductStatusException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
-
     @ExceptionHandler(AdminNotFoundException.class)
     public ResponseEntity<String> handleAdminNotFound(AdminNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<String> handleProductNotFound(ProductNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 

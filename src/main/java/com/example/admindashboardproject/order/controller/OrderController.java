@@ -3,10 +3,7 @@ package com.example.admindashboardproject.order.controller;
 import com.example.admindashboardproject.admin.dto.SessionAdmin;
 import com.example.admindashboardproject.admin.entity.Role;
 import com.example.admindashboardproject.admin.global.exception.InvalidCredentialException;
-import com.example.admindashboardproject.order.dto.CreateRequest;
-import com.example.admindashboardproject.order.dto.CreateResponse;
-import com.example.admindashboardproject.order.dto.GetOrderDetailResponse;
-import com.example.admindashboardproject.order.dto.ListGetOrderResponse;
+import com.example.admindashboardproject.order.dto.*;
 import com.example.admindashboardproject.order.entity.OrderStatus;
 import com.example.admindashboardproject.order.exception.InvalidQuantityException;
 import com.example.admindashboardproject.order.service.OrderService;
@@ -55,6 +52,13 @@ public class OrderController {
     @GetMapping("/{id}")
     public ResponseEntity<GetOrderDetailResponse> getOrderDetail(@PathVariable Long id) {
         GetOrderDetailResponse response = orderService.getOrderDetail(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<UpdateStatusResponse> updateStatus(@PathVariable Long id, @RequestBody UpdateStatusRequest request
+    ) {
+        UpdateStatusResponse response = orderService.updateStatus(id, request.getStatus());
         return ResponseEntity.ok(response);
     }
 

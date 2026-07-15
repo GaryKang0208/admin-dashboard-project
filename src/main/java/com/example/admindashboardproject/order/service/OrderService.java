@@ -7,6 +7,7 @@ import com.example.admindashboardproject.order.dto.*;
 import com.example.admindashboardproject.order.entity.OrderStatus;
 import com.example.admindashboardproject.order.entity.Orders;
 import com.example.admindashboardproject.order.exception.InvalidQuantityException;
+import com.example.admindashboardproject.order.exception.InvalidStatusOrder;
 import com.example.admindashboardproject.order.exception.NotFoundException;
 import com.example.admindashboardproject.order.exception.ProductException;
 import com.example.admindashboardproject.order.repository.OrderRepository;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -114,6 +116,31 @@ public class OrderService {
                 admin != null ? admin.getRole().name() : null
         );
     }
+
+    @Transactional
+    public UpdateStatusResponse updateStatus(Long id, OrderStatus status) {
+        Orders order = orderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("주문을 찾을 수 없습니다."));
+
+        OrderStatus currentStatus = order.getStatus();
+
+        if (!currentStatus.canTransitionTo(status)) {
+            throw new InvalidStatusOrder(
+                    String.format("%s 상태에서 %s로 변경할 수 없습니다.", currentStatus, status)
+            );
+        }
+
+        order.updateStatus(status);
+        Orders saved = orderRepository.save(order);
+
+        return new UpdateStatusResponse(saved.getId(), saved.getOrderNumber(), saved.getStatus());
+
+    }
+
+
+
+
+
 
 
 

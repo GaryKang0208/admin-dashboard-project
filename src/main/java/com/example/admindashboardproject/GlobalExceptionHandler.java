@@ -7,6 +7,7 @@ import com.example.admindashboardproject.admin.global.exception.ErrorResponse;
 import com.example.admindashboardproject.admin.global.exception.InvalidCredentialException;
 import com.example.admindashboardproject.admin.global.exception.InvalidStatus;
 import com.example.admindashboardproject.order.exception.InvalidQuantityException;
+import com.example.admindashboardproject.order.exception.InvalidStatusOrder;
 import com.example.admindashboardproject.order.exception.NotFoundException;
 import com.example.admindashboardproject.order.exception.ProductException;
 import org.springframework.http.HttpStatus;
@@ -67,6 +68,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleAccountNotActive(ProductException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse("Product Status Error", e.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidStatusOrder.class)
+    public ResponseEntity<ErrorResponse> handleAccountNotActive(InvalidStatusOrder e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse("Invalid Status Transition", e.getMessage()));
     }
 
 

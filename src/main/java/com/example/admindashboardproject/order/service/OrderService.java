@@ -1,6 +1,4 @@
 package com.example.admindashboardproject.order.service;
-
-
 import com.example.admindashboardproject.admin.entity.Admins;
 import com.example.admindashboardproject.admin.repository.AdminRepository;
 import com.example.admindashboardproject.customer.entity.Customer;
@@ -28,6 +26,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+// Service 구현
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -37,7 +36,6 @@ public class OrderService {
 
     @Transactional
     public CreateResponse create(CreateRequest request, Long adminId) {
-
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다"));
         Customer customer = customerRepository.findById(request.getCustomerId())
@@ -87,23 +85,19 @@ public class OrderService {
                 .stream()
                 .map(this::toResponse)
                 .toList();
-
         PageInfo pageInfo = new PageInfo(
                 orderPage.getNumber() + 1,
                 orderPage.getSize(),
                 orderPage.getTotalElements(),
                 orderPage.getTotalPages()
         );
-
         return new ListGetOrderResponse(orders, pageInfo);
     }
 
     public GetOrderDetailResponse getOrderDetail(Long id) {
         Orders order = orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("주문을 찾을 수 없습니다."));
-
         Admins admin = order.getAdmin(); // null이면 고객 직접 주문
-
         return new GetOrderDetailResponse(
                 order.getOrderNumber(),
                 order.getCustomer().getName(),
@@ -123,18 +117,14 @@ public class OrderService {
     public UpdateStatusResponse updateStatus(Long id, OrderStatus status) {
         Orders order = orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("주문을 찾을 수 없습니다."));
-
         OrderStatus currentStatus = order.getStatus();
-
         if (!currentStatus.canTransitionTo(status)) {
             throw new InvalidStatusOrder(
                     String.format("%s 상태에서 %s로 변경할 수 없습니다.", currentStatus, status)
             );
         }
-
         order.updateStatus(status);
         Orders saved = orderRepository.save(order);
-
         return new UpdateStatusResponse(saved.getId(), saved.getOrderNumber(), saved.getStatus());
     }
 
@@ -142,23 +132,17 @@ public class OrderService {
     public CancelResponse cancelOrder(Long id, String cancelReason) {
         Orders order = orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("주문을 찾을 수 없습니다."));
-
         if (cancelReason == null || cancelReason.isBlank()) {
             throw new InvalidCancelException("취소 사유는 필수입니다.");
         }
-
         if (order.getStatus() != OrderStatus.PREPARING) {
             throw new InvalidCancelException("준비중 상태에서만 취소할 수 있습니다.");
         }
-
         order.cancel(cancelReason);
-
         Product product = order.getProduct();
         restoreStockAndUpdateStatus(product, order.getQuantity());
         productRepository.save(product);
-
         Orders saved = orderRepository.save(order);
-
         return new CancelResponse(
                 saved.getId(),
                 saved.getOrderNumber(),
@@ -194,8 +178,6 @@ public class OrderService {
         product.updateStock(-quantity);
     }
 
-// ==========================================================
-
     private void validateOrderRequest(Product product, Integer quantity) {
         if (quantity < 1) {
             throw new InvalidQuantityException("수량은 1 이상이어야 합니다");
@@ -210,11 +192,13 @@ public class OrderService {
             throw new InvalidQuantityException("재고가 부족합니다.");
         }
     }
+
     private String generateOrderNumber() {
         String datePart = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
         String randomPart = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         return "ORD-" + datePart + "-" + randomPart;
     }
+
     private void restoreStockAndUpdateStatus(Product product, int quantity) {
         product.updateStock(quantity);
     }

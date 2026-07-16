@@ -1,5 +1,4 @@
 package com.example.admindashboardproject.admin.dto;
-
 import com.example.admindashboardproject.admin.entity.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,8 +7,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-
-// 회원가입용
 public class AdminRequest {
     @NotBlank(message = "이름은 필수 입력값입니다.")
     private String name;
@@ -26,6 +23,5 @@ public class AdminRequest {
     @Pattern(regexp = "^010-\\d{4}-\\d{4}$",
              message = "전화번호는 010-XXXX-XXXX 형식이어야 합니다.")
     private String phone;
-
     private Role role;
 }

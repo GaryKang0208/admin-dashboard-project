@@ -1,16 +1,12 @@
 package com.example.admindashboardproject.order.dto;
-
 import com.example.admindashboardproject.order.entity.OrderStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor
-
 public class CreateResponse {
-
     private final Long id;
     private final String orderNumber;
     private final String customerName;
@@ -19,8 +15,4 @@ public class CreateResponse {
     private final Integer totalPrice;
     private final OrderStatus status;
     private final LocalDateTime createdAt;
-
-
-
-
 }

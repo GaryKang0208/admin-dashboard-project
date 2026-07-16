@@ -8,8 +8,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,7 +15,6 @@ import java.time.LocalDateTime;
 @Table(name = "orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Orders extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,15 +40,12 @@ public class Orders extends BaseEntity {
     @Column(nullable = false)
     private Integer totalPrice;
 
-
     @Enumerated(EnumType.STRING)
     @Column(length = 50 ,nullable = false)
     private OrderStatus status;
 
     @Column(columnDefinition = "TEXT")
     private String cancelReason;
-
-
     private LocalDateTime cancelAt;
 
     public Orders(String orderNumber, Customer customer, Product product, Admins admin , Integer quantity){
@@ -63,13 +57,11 @@ public class Orders extends BaseEntity {
 
         this.totalPrice = product.getPrice() * quantity;
         this.status = OrderStatus.PREPARING;
-
     }
 
     public void updateStatus(OrderStatus status) {
         this.status = status;
     }
-
 
     public void cancel(String cancelReason) {
         this.status = OrderStatus.CANCELED;

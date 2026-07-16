@@ -1,14 +1,10 @@
 package com.example.admindashboardproject.admin.dto;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-
-// 비밀번호 변경
 public class PasswordChangeRequest {
-
     @NotBlank(message = "현재 비밀번호는 필수 입력값입니다.")
     private String currentPassword;
 

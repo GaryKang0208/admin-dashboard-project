@@ -1,10 +1,8 @@
 package com.example.admindashboardproject.admin.dto;
-
 import com.example.admindashboardproject.admin.entity.Role;
 import com.example.admindashboardproject.admin.entity.Status;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDateTime;
 
 @Getter

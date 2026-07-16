@@ -1,5 +1,4 @@
 package com.example.admindashboardproject.product.dto;
-
 import com.example.admindashboardproject.product.entity.ProductStatus;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -22,6 +21,5 @@ public record ProductCreateRequest(
 
         @NotNull(message = "상태는 필수입니다")
         ProductStatus status
-
 ) {
 }

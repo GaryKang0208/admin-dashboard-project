@@ -1,15 +1,11 @@
 package com.example.admindashboardproject.admin.dto;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 
 @Getter
-
-// 정보수정/내프로필 수정 공용
 public class AdminUpdateRequest {
-
     @NotBlank(message = "이름은 필수 입력값입니다.")
     private String name;
 

@@ -1,7 +1,4 @@
 package com.example.admindashboardproject.customer.service;
-
-
-
 import com.example.admindashboardproject.customer.dto.*;
 import com.example.admindashboardproject.customer.entity.Customer;
 import com.example.admindashboardproject.customer.exception.CustomerNotFoundException;
@@ -12,16 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CustomersService {
     private final CustomerRepository customerRepository;
     private final OrderRepository orderRepository;
@@ -76,7 +71,7 @@ public class CustomersService {
         }
         return customerResponseList;
     }
-    //상세 조회
+
     @Transactional(readOnly = true)
     public CustomerResponse findOne(Long id) {
         Customer customer=customerRepository.findById(id)
@@ -95,8 +90,6 @@ public class CustomersService {
         );
     }
 
-    //정보 수정
-    @Transactional
     public CustomerUpdateResponse update(Long id, CustomerUpdateRequest customerUpdateRequest) {
         Customer customer=customerRepository.findById(id)
                 .orElseThrow(()->new CustomerNotFoundException(
@@ -117,7 +110,7 @@ public class CustomersService {
                 customerRenewal.getUpdatedAt()
         );
     }
-    @Transactional //상태 변경
+
     public ChangeStatusResponse changeStatus(Long customerId, ChangeStatusRequest changeStatusRequest) {
         Customer customer=customerRepository.findById(customerId)
                 .orElseThrow(()->new CustomerNotFoundException(
@@ -135,8 +128,6 @@ public class CustomersService {
         );
     }
 
-    //고객 삭제
-    @Transactional
     public void delete(Long id) {
         Customer customer=customerRepository.findById(id)
                 .orElseThrow(()->new CustomerNotFoundException(
@@ -145,6 +136,4 @@ public class CustomersService {
         orderRepository.deleteByCustomer_Id(id); // 관련 주문 먼저 삭제
         customerRepository.delete(customer);
     }
-
-
 }

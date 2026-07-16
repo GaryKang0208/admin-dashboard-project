@@ -1,16 +1,12 @@
 package com.example.admindashboardproject.admin.dto;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-
-// 로그인용
 public class AdminLoginRequest {
-
     @NotBlank(message = "이메일은 필수 입력값입니다.")
+
     @Email(message = "이메일 형식이 아닙니다.")
     private String email;
 

@@ -1,5 +1,4 @@
 package com.example.admindashboardproject.admin.controller.auth;
-
 import com.example.admindashboardproject.admin.dto.AdminLoginRequest;
 import com.example.admindashboardproject.admin.dto.AdminRequest;
 import com.example.admindashboardproject.admin.dto.AdminResponse;
@@ -20,22 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/commerce/admins")
-
 // 회원가입/로그인/로그아웃
 public class AdminController {
     private final AdminService service;
 
     @PostMapping("/signup")
     public ResponseEntity<AdminResponse> signup(@Valid @RequestBody AdminRequest request) {
-
         AdminResponse response = service.signupadmin(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody AdminLoginRequest request, HttpSession session) {
-
-
         SessionAdmin sessionAdmin = service.loginadmin(request);
         session.setAttribute("loginAdmin", sessionAdmin);
         return ResponseEntity.ok().build();

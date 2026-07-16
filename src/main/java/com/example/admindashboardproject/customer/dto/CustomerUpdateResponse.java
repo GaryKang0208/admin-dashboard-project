@@ -1,8 +1,6 @@
 package com.example.admindashboardproject.customer.dto;
-
 import com.example.admindashboardproject.customer.enums.CustomerStatus;
 import lombok.Getter;
-
 import java.time.LocalDateTime;
 
 @Getter

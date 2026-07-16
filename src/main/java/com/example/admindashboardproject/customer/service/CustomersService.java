@@ -1,28 +1,25 @@
 package com.example.admindashboardproject.customer.service;
-
-
-
 import com.example.admindashboardproject.customer.dto.*;
 import com.example.admindashboardproject.customer.entity.Customer;
 import com.example.admindashboardproject.customer.exception.CustomerNotFoundException;
 import com.example.admindashboardproject.customer.repository.CustomerRepository;
+import com.example.admindashboardproject.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CustomersService {
     private final CustomerRepository customerRepository;
+    private final OrderRepository orderRepository;
 
     @Transactional(readOnly = true)
     public List<CustomerResponse> findAll(CustomerSearchRequest request) {
@@ -74,14 +71,14 @@ public class CustomersService {
         }
         return customerResponseList;
     }
-    //상세 조회
+
     @Transactional(readOnly = true)
     public CustomerResponse findOne(Long id) {
         Customer customer=customerRepository.findById(id)
                 .orElseThrow(()->new CustomerNotFoundException(
                         "고객을 찾을수 없습니다:"
                 ));
-        CustomerResponse customerResponse= new CustomerResponse(
+        return new CustomerResponse(
                 customer.getId(),
                 customer.getName(),
                 customer.getEmail(),
@@ -91,11 +88,8 @@ public class CustomersService {
                 customer.getTotalPurchaseAmount(),
                 customer.getCreatedAt()
         );
-        return customerResponse;
     }
 
-    //정보 수정
-    @Transactional
     public CustomerUpdateResponse update(Long id, CustomerUpdateRequest customerUpdateRequest) {
         Customer customer=customerRepository.findById(id)
                 .orElseThrow(()->new CustomerNotFoundException(
@@ -107,7 +101,7 @@ public class CustomersService {
                 customerUpdateRequest.getPhone()
         );
         Customer customerRenewal = customerRepository.save(customer);
-        CustomerUpdateResponse customerUpdateResponse = new CustomerUpdateResponse(
+        return new CustomerUpdateResponse(
                 customerRenewal.getId(),
                 customerRenewal.getName(),
                 customerRenewal.getEmail(),
@@ -115,9 +109,8 @@ public class CustomersService {
                 customerRenewal.getStatus(),
                 customerRenewal.getUpdatedAt()
         );
-        return customerUpdateResponse;
     }
-    @Transactional //상태 변경
+
     public ChangeStatusResponse changeStatus(Long customerId, ChangeStatusRequest changeStatusRequest) {
         Customer customer=customerRepository.findById(customerId)
                 .orElseThrow(()->new CustomerNotFoundException(
@@ -127,27 +120,20 @@ public class CustomersService {
                 changeStatusRequest.getStatus()
         );
         Customer customerRenewal = customerRepository.save(customer);
-        ChangeStatusResponse changeStatusResponse = new ChangeStatusResponse(
+        return new ChangeStatusResponse(
                 customerRenewal.getId(),
                 customerRenewal.getName(),
                 customerRenewal.getStatus(),
                 customerRenewal.getUpdatedAt()
         );
-        return changeStatusResponse;
     }
 
-    //고객 삭제
-    @Transactional
     public void delete(Long id) {
         Customer customer=customerRepository.findById(id)
                 .orElseThrow(()->new CustomerNotFoundException(
                         "고객을 찾을수 없습니다:"
                 ));
+        orderRepository.deleteByCustomer_Id(id); // 관련 주문 먼저 삭제
         customerRepository.delete(customer);
     }
-
-
 }
-//인셉션 안에 커스텀 예외처리를 만들어 놓으면 된다.
-
-//

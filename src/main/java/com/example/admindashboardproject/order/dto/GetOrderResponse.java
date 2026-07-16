@@ -1,14 +1,11 @@
 package com.example.admindashboardproject.order.dto;
-
 import com.example.admindashboardproject.order.entity.OrderStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor
-
 public class GetOrderResponse {
     private final Long id;
     private final String orderNumber;

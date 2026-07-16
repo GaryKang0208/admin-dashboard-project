@@ -1,13 +1,10 @@
-package com.example.admindashboardproject.admin.global.exception;
-
+package com.example.admindashboardproject.admin.exception;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-
 public class ErrorResponse {
-
     private final String errorCode;
     private final String message;
 }

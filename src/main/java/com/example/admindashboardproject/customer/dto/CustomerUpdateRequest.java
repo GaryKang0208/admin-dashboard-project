@@ -1,11 +1,10 @@
 package com.example.admindashboardproject.customer.dto;
-
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 
 @Getter
 public class CustomerUpdateRequest {
-    @Size(min=5,max=100)
+    @Size(min=2,max=10)
     private String name;
     @Email(message = "이메일 형식이 올바르지 않습니다")
     private String email;

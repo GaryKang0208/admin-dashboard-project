@@ -1,13 +1,10 @@
 package com.example.admindashboardproject.admin.dto;
-
 import lombok.Getter;
 import org.springframework.data.domain.Page;
-
 import java.util.List;
 
 @Getter
 public class PageResponse<T> {
-
     private final List<T> content;
     private final int currentPage;
     private final int pageSize;

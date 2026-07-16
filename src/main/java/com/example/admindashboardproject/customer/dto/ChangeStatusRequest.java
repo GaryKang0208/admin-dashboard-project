@@ -1,11 +1,7 @@
 package com.example.admindashboardproject.customer.dto;
-
-
-
 import com.example.admindashboardproject.customer.enums.CustomerStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-
 
 @Getter
 public class ChangeStatusRequest {

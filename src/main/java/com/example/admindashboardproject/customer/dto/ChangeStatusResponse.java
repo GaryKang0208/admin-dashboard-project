@@ -1,10 +1,6 @@
 package com.example.admindashboardproject.customer.dto;
-
-
 import com.example.admindashboardproject.customer.enums.CustomerStatus;
 import lombok.Getter;
-import org.springframework.data.annotation.LastModifiedDate;
-
 import java.time.LocalDateTime;
 
 @Getter

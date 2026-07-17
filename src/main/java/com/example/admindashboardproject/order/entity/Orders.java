@@ -27,7 +27,7 @@ public class Orders extends BaseEntity {
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id" , nullable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -68,6 +68,9 @@ public class Orders extends BaseEntity {
         this.cancelReason = cancelReason;
         this.cancelAt = LocalDateTime.now();
     }
+
+
+
 
 
 

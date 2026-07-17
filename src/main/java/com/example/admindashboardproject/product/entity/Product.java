@@ -67,7 +67,6 @@ public class Product extends BaseEntity {
 
     public void updateStock(int quantity) {
         int newStock = this.stock + quantity;
-
         if (newStock < 0) {
             throw new InvalidStockException("재고는 0 미만이 될 수 없습니다.");
         }
@@ -76,7 +75,14 @@ public class Product extends BaseEntity {
     }
 
     public void changeStatus(ProductStatus status) {
-
         this.status = status;
+    }
+
+    private boolean deleted = false;
+    public boolean isDeleted() {
+        return deleted;
+    }
+    public void softDelete() {
+        this.deleted = true;
     }
 }

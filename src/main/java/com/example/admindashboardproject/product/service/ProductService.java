@@ -26,6 +26,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final AdminRepository adminRepository;
 
+
     public ProductResponse register(ProductCreateRequest request,Long adminId){
         if (request.stock() > 0 && request.status() == ProductStatus.SOLD_OUT){
             throw new InvalidProductStatusException("재고가 있는 상품은 품절 상태로 등록할 수 없습니다.");
@@ -60,8 +61,8 @@ public class ProductService {
         Specification<Product> spec = Specification
                 .where(ProductSpecification.hasKeyword(keyword))
                 .and(ProductSpecification.hasCategory(category))
-                .and(ProductSpecification.hasStatus(status));
-
+                .and(ProductSpecification.hasStatus(status))
+                .and(ProductSpecification.notDeleted());
         Sort.Direction direction = "desc".equalsIgnoreCase(sortDirection)
                 ? Sort.Direction.DESC
                 : Sort.Direction.ASC;
@@ -76,15 +77,19 @@ public class ProductService {
     public ProductResponse getProduct(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
+        if (product.isDeleted()) {
+            throw new ProductNotFoundException("존재하지 않는 상품입니다.");
+        }
         return ProductResponse.from(product);
     }
 
     public ProductResponse update(Long id, ProductUpdateRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
-
         product.update(request.name(), request.category(), request.price());
-
+        if (product.isDeleted()) {
+            throw new ProductNotFoundException("존재하지 않는 상품입니다.");
+        }
         return ProductResponse.from(product);
     }
 
@@ -92,6 +97,9 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
         product.updateStock(request.stock());
+        if (product.isDeleted()) {
+            throw new ProductNotFoundException("존재하지 않는 상품입니다.");
+        }
         return ProductResponse.from(product);
     }
 
@@ -99,12 +107,15 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
         product.changeStatus(request.status());
+        if (product.isDeleted()) {
+            throw new ProductNotFoundException("존재하지 않는 상품입니다.");
+        }
         return ProductResponse.from(product);
     }
 
     public void delete(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
-        productRepository.delete(product);
+        product.softDelete();
     }
 }

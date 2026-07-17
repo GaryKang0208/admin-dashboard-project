@@ -10,6 +10,7 @@ import com.example.admindashboardproject.order.exception.*;
 import com.example.admindashboardproject.order.repository.OrderRepository;
 import com.example.admindashboardproject.product.entity.Product;
 import com.example.admindashboardproject.product.entity.ProductStatus;
+import com.example.admindashboardproject.product.exception.ProductNotFoundException;
 import com.example.admindashboardproject.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,6 +41,10 @@ public class OrderService {
                 .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다"));
         Customer customer = customerRepository.findById(request.getCustomerId())
                 .orElseThrow(() -> new NotFoundException("고객을 찾을 수 없습니다"));
+
+        if (product.isDeleted()) { // 이 부분 추가
+            throw new ProductNotFoundException("존재하지 않는 상품입니다.");
+        }
         Admins admin = adminRepository.getReferenceById(adminId);
         validateOrderRequest(product, request.getQuantity());
         decreaseStockAndUpdateStatus(product, request.getQuantity());
@@ -152,6 +157,10 @@ public class OrderService {
     }
 
     private GetOrderResponse toResponse(Orders order) {
+        Product product = order.getProduct();
+
+        String productName = (product != null) ? product.getName() : "삭제된 상품";
+        Integer productPrice = (product != null) ? product.getPrice() : null;
         return new GetOrderResponse(
                 order.getId(),
                 order.getOrderNumber(),
@@ -162,6 +171,7 @@ public class OrderService {
                 order.getCreatedAt(),
                 order.getStatus(),
                 order.getAdmin() != null ? order.getAdmin().getName() : null
+
         );
     }
 
@@ -202,6 +212,7 @@ public class OrderService {
     private void restoreStockAndUpdateStatus(Product product, int quantity) {
         product.updateStock(quantity);
     }
+
 }
 
 
